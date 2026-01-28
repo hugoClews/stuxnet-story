@@ -270,116 +270,144 @@ const stories: Record<string, Story> = {
   }
 };
 
-// Korea Location Map Component
+// Real South Korea GeoJSON coordinates converted to SVG path
+// Original coords: [[128.349716,38.612243],[129.21292,37.432392],...]
+// Projected to viewBox with proper aspect ratio
 function KoreaLocationMap() {
+  // South Korea path from actual GeoJSON - projected to fit viewBox
+  // ViewBox: We'll use 0 0 400 400, center around Korea
+  // Korea roughly spans: lon 126-130, lat 34-39
+  // Transform: x = (lon - 124) * 50, y = (42 - lat) * 50
+  const koreaPath = "M 217 170 L 261 209 L 273 241 L 273 283 L 255 308 L 209 326 L 169 340 L 125 347 L 119 327 L 128 283 L 106 231 L 143 204 L 109 162 L 112 158 L 134 154 L 154 131 L 190 127 L 210 123 L 217 170 Z";
+  
+  // Seoul coordinates: roughly 127°, 37.5°
+  const seoulX = (127 - 124) * 50; // = 150
+  const seoulY = (42 - 37.5) * 50; // = 225
+  
   return (
-    <svg className="map-svg" viewBox="0 0 400 350" preserveAspectRatio="xMidYMid meet">
-      {/* South Korea outline */}
-      <path className="country-path origin" d="
-        M 180 50
-        C 200 45, 220 50, 240 55
-        C 260 60, 275 75, 280 95
-        C 285 115, 290 140, 285 165
-        C 280 190, 270 220, 255 250
-        C 240 280, 220 300, 195 310
-        C 170 320, 145 315, 125 300
-        C 105 285, 95 260, 90 235
-        C 85 210, 90 180, 100 155
-        C 110 130, 125 105, 145 85
-        C 165 65, 175 55, 180 50
-        Z
-      "/>
+    <svg className="map-svg" viewBox="0 0 400 450" preserveAspectRatio="xMidYMid meet">
+      {/* Background sea */}
+      <rect x="0" y="0" width="400" height="450" fill="rgba(0,20,40,0.3)" />
+      
+      {/* South Korea - real outline */}
+      <path 
+        className="country-path origin" 
+        d={koreaPath}
+        transform="translate(0, 20)"
+      />
       
       {/* Seoul marker with pulse */}
-      <circle className="location-pulse" cx="195" cy="95" r="8">
-        <animate attributeName="r" values="8;15;8" dur="2s" repeatCount="indefinite"/>
+      <circle className="location-pulse" cx={seoulX} cy={seoulY + 40} r="12">
+        <animate attributeName="r" values="12;22;12" dur="2s" repeatCount="indefinite"/>
         <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/>
       </circle>
-      <circle className="city-marker" cx="195" cy="95" r="6"/>
-      <text className="city-label" x="210" y="100">Seoul</text>
+      <circle className="city-marker" cx={seoulX} cy={seoulY + 40} r="8"/>
+      <text className="city-label" x={seoulX + 15} y={seoulY + 45} fontSize="14" fontWeight="600">Seoul</text>
       
       {/* Coupang HQ indicator */}
-      <rect x="175" y="105" width="80" height="25" rx="4" fill="rgba(255,51,102,0.2)" stroke="var(--accent2)" strokeWidth="1"/>
-      <text x="215" y="122" fill="var(--text)" fontSize="10" textAnchor="middle">Coupang HQ</text>
+      <rect x={seoulX - 5} y={seoulY + 55} width="95" height="28" rx="4" fill="rgba(255,51,102,0.2)" stroke="var(--accent2)" strokeWidth="1.5"/>
+      <text x={seoulX + 42} y={seoulY + 74} fill="var(--text)" fontSize="11" textAnchor="middle" fontWeight="600">Coupang HQ</text>
       
-      {/* Other cities */}
-      <circle cx="260" cy="180" r="4" fill="rgba(0,240,255,0.5)"/>
-      <text className="city-label" x="270" y="185" fontSize="10" fill="var(--text-dim)">Daegu</text>
+      {/* Busan marker */}
+      <circle cx="250" cy="355" r="5" fill="rgba(0,240,255,0.5)"/>
+      <text x="265" y="360" fontSize="11" fill="var(--text-dim)">Busan</text>
       
-      <circle cx="230" cy="260" r="4" fill="rgba(0,240,255,0.5)"/>
-      <text className="city-label" x="245" y="265" fontSize="10" fill="var(--text-dim)">Busan</text>
+      {/* Incheon marker */}
+      <circle cx="130" cy="255" r="5" fill="rgba(0,240,255,0.5)"/>
+      <text x="85" y="260" fontSize="11" fill="var(--text-dim)">Incheon</text>
       
       {/* Sea labels */}
-      <text x="60" y="180" fill="var(--text-dim)" fontSize="11" fontStyle="italic">Yellow Sea</text>
-      <text x="310" y="140" fill="var(--text-dim)" fontSize="11" fontStyle="italic">East Sea</text>
+      <text x="30" y="300" fill="var(--text-dim)" fontSize="13" fontStyle="italic" opacity="0.7">Yellow</text>
+      <text x="40" y="318" fill="var(--text-dim)" fontSize="13" fontStyle="italic" opacity="0.7">Sea</text>
+      <text x="320" y="200" fill="var(--text-dim)" fontSize="13" fontStyle="italic" opacity="0.7">East Sea</text>
+      <text x="305" y="218" fill="var(--text-dim)" fontSize="11" fontStyle="italic" opacity="0.5">(Sea of Japan)</text>
     </svg>
   );
 }
 
-// Korea to China Flight Map Component
+// Korea to China Flight Map with real country outlines
 function KoreaChinaFlightMap() {
+  // For this view, we need both countries visible
+  // Wider viewBox: lon 108-132, lat 20-42
+  // Transform: x = (lon - 105) * 15, y = (45 - lat) * 15
+  
+  // China's eastern coast (simplified from GeoJSON for the visible area)
+  const chinaPath = `
+    M 75 375 
+    L 60 360 L 55 340 L 65 315 L 60 290 L 50 270 
+    L 55 250 L 70 230 L 90 210 L 105 195 
+    L 130 175 L 145 160 L 165 145 L 180 125 
+    L 200 110 L 220 95 L 245 80 L 270 70 
+    L 290 65 L 315 60 L 340 55 L 360 50
+    L 380 48 L 400 50
+    L 400 0 L 0 0 L 0 400 L 60 400 L 75 375
+    Z
+  `;
+  
+  // South Korea (scaled for this view)
+  const koreaPath = `
+    M 352 185 L 372 210 L 380 230 L 378 260 
+    L 365 280 L 340 295 L 318 305 L 300 308 
+    L 295 295 L 300 270 L 285 240 L 305 220 
+    L 285 195 L 290 190 L 305 188 L 318 175 
+    L 340 172 L 350 170 L 352 185 Z
+  `;
+  
+  // Seoul position in this projection
+  const seoulX = (127 - 105) * 15; // = 330
+  const seoulY = (45 - 37.5) * 15; // = 112.5 -> ~190 with offset
+  
+  // Qingdao area (destination)
+  const destX = (120 - 105) * 15; // = 225
+  const destY = (45 - 36) * 15; // = 135 -> ~200 with offset
+  
   return (
-    <svg className="map-svg" viewBox="0 0 500 350" preserveAspectRatio="xMidYMid meet">
-      {/* China outline */}
-      <path className="country-path highlight" d="
-        M 20 30
-        C 40 25, 80 20, 120 30
-        C 160 40, 180 60, 190 90
-        C 200 120, 195 150, 185 180
-        C 175 210, 160 240, 140 265
-        C 120 290, 95 305, 70 310
-        C 45 315, 25 310, 20 290
-        C 15 270, 15 240, 20 210
-        C 25 180, 30 150, 30 120
-        C 30 90, 25 60, 20 30
-        Z
-      "/>
-      <text x="90" y="170" fill="var(--text)" fontSize="16" fontWeight="600">CHINA</text>
+    <svg className="map-svg" viewBox="0 0 500 380" preserveAspectRatio="xMidYMid meet">
+      {/* Background sea */}
+      <rect x="0" y="0" width="500" height="380" fill="rgba(0,20,40,0.3)" />
       
-      {/* Yellow Sea */}
-      <text x="200" y="200" fill="var(--accent)" fontSize="12" fontStyle="italic" opacity="0.6">Yellow Sea</text>
+      {/* Yellow Sea area */}
+      <text x="240" y="260" fill="var(--accent)" fontSize="14" fontStyle="italic" opacity="0.5">Yellow Sea</text>
+      
+      {/* China - eastern coast */}
+      <path 
+        className="country-path highlight" 
+        d={chinaPath}
+      />
+      <text x="100" y="180" fill="var(--text)" fontSize="20" fontWeight="700">CHINA</text>
       
       {/* South Korea */}
-      <path className="country-path origin" d="
-        M 330 80
-        C 345 75, 360 80, 375 85
-        C 390 90, 400 100, 405 115
-        C 410 130, 412 150, 408 170
-        C 404 190, 395 215, 382 240
-        C 369 265, 352 285, 332 295
-        C 312 305, 290 300, 275 288
-        C 260 276, 252 258, 248 238
-        C 244 218, 248 195, 256 175
-        C 264 155, 277 135, 293 118
-        C 309 101, 322 85, 330 80
-        Z
-      "/>
-      <text x="320" y="185" fill="var(--text)" fontSize="14" fontWeight="600">KOREA</text>
+      <path 
+        className="country-path origin" 
+        d={koreaPath}
+      />
+      <text x="330" y="250" fill="var(--text)" fontSize="14" fontWeight="600">S. KOREA</text>
       
       {/* Seoul marker */}
-      <circle className="location-pulse" cx="340" cy="118" r="6">
-        <animate attributeName="r" values="6;12;6" dur="2s" repeatCount="indefinite"/>
+      <circle className="location-pulse" cx="335" cy="195" r="8">
+        <animate attributeName="r" values="8;15;8" dur="2s" repeatCount="indefinite"/>
         <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/>
       </circle>
-      <circle className="city-marker" cx="340" cy="118" r="5"/>
-      <text className="city-label" x="350" y="112" fontSize="11">Seoul</text>
+      <circle className="city-marker" cx="335" cy="195" r="6"/>
+      <text className="city-label" x="348" y="192" fontSize="12">Seoul</text>
       
-      {/* Chinese destination */}
-      <circle cx="150" cy="180" r="5" fill="var(--accent2)" opacity="0.8"/>
-      <text x="115" y="200" fill="var(--text-dim)" fontSize="10">
-        <tspan x="115" dy="0">Destination</tspan>
-        <tspan x="115" dy="12">Unknown</tspan>
+      {/* Chinese destination area */}
+      <circle cx="200" cy="195" r="6" fill="var(--accent2)" opacity="0.8"/>
+      <text x="150" y="215" fill="var(--text-dim)" fontSize="11">
+        <tspan x="150" dy="0">Destination</tspan>
+        <tspan x="150" dy="14">Unknown</tspan>
       </text>
       
-      {/* Flight path (animated) */}
-      <path className="flight-path" d="
-        M 340 118
-        Q 250 100 200 140
-        Q 170 160 150 180
-      ">
+      {/* Flight path (animated curve) */}
+      <path 
+        className="flight-path" 
+        d="M 335 195 Q 280 160 240 175 Q 220 182 200 195"
+        strokeDasharray="500"
+        strokeDashoffset="500"
+      >
         <animate 
           attributeName="stroke-dashoffset" 
-          from="1000" 
+          from="500" 
           to="0" 
           dur="2s" 
           fill="freeze"
@@ -387,8 +415,8 @@ function KoreaChinaFlightMap() {
         />
       </path>
       
-      {/* Arrow head */}
-      <polygon className="flight-arrow" points="150,180 158,172 162,182 152,186">
+      {/* Arrow head at destination */}
+      <polygon className="flight-arrow" points="200,195 212,187 214,199 202,203" opacity="0">
         <animate 
           attributeName="opacity" 
           from="0" 
@@ -399,8 +427,8 @@ function KoreaChinaFlightMap() {
         />
       </polygon>
       
-      {/* Distance */}
-      <text x="240" y="90" fill="var(--accent2)" fontSize="11" fontWeight="600">~800 km</text>
+      {/* Distance indicator */}
+      <text x="260" y="145" fill="var(--accent2)" fontSize="12" fontWeight="600">~800 km</text>
     </svg>
   );
 }
