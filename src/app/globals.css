@@ -123,9 +123,11 @@ body {
 
 /* Attack Flow Animation */
 .attack-flow-slide {
-  padding: clamp(4px, 1vmin, 15px) !important;
+  padding: clamp(4px, 1vmin, 10px) !important;
   height: 100% !important;
   width: 100% !important;
+  overflow: visible !important;
+  justify-content: flex-start !important;
 }
 
 /* ===========================================
@@ -709,14 +711,15 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   height: 100%;
-  padding: clamp(15px, 4vmin, 30px);
+  padding: clamp(8px, 2vmin, 16px);
   text-align: center;
 }
 
 .mv2-header {
-  margin-bottom: clamp(20px, 5vmin, 40px);
+  margin-bottom: clamp(8px, 2vmin, 16px);
+  flex-shrink: 0;
 }
 
 .mv2-stage {
@@ -741,7 +744,8 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 0;
-  margin-bottom: clamp(20px, 5vmin, 40px);
+  flex: 1;
+  justify-content: center;
 }
 
 .mv2-node {
@@ -835,9 +839,10 @@ body {
 }
 
 .mv2-desc {
-  font-size: clamp(12px, 3vmin, 18px);
+  font-size: clamp(11px, 2.5vmin, 16px);
   color: var(--text-dim);
-  margin-bottom: clamp(20px, 5vmin, 40px);
+  margin: clamp(8px, 2vmin, 16px) 0;
+  flex-shrink: 0;
 }
 
 .mv2-progress {
