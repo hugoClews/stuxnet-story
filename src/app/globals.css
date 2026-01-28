@@ -796,8 +796,10 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(8px, 2vmin, 16px);
+  gap: clamp(4px, 1vmin, 10px);
   min-height: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .mobile-node-v2 {
@@ -810,8 +812,8 @@ body {
 
 .node-glow {
   position: absolute;
-  width: 150%;
-  height: 150%;
+  width: 120%;
+  height: 120%;
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
@@ -944,7 +946,7 @@ body {
 .mobile-data-stream {
   position: relative;
   width: clamp(4px, 1vmin, 6px);
-  height: clamp(60px, 18vmin, 100px);
+  height: clamp(40px, 12vmin, 70px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1008,12 +1010,17 @@ body {
 
 /* Description */
 .mobile-desc-v2 {
-  font-size: clamp(10px, 2.5vmin, 16px);
+  font-size: clamp(9px, 2vmin, 14px);
   color: var(--text-dim);
-  max-width: 90%;
-  line-height: 1.4;
-  margin-top: clamp(8px, 2vmin, 16px);
+  max-width: 85%;
+  line-height: 1.3;
+  margin-top: clamp(4px, 1vmin, 10px);
   flex-shrink: 0;
+  position: relative;
+  z-index: 5;
+  background: rgba(10, 10, 15, 0.8);
+  padding: clamp(4px, 1vmin, 8px) clamp(8px, 2vmin, 12px);
+  border-radius: 8px;
 }
 
 /* Progress indicator */
