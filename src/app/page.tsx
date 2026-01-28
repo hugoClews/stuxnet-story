@@ -48,275 +48,457 @@ interface Slide {
   events?: TimelineEvent[];
   lines?: CodeLine[];
   stage?: number;
+  mapType?: string;
 }
 
 interface Story {
+  id: string;
   title: string;
   subtitle: string;
   slides: Slide[];
 }
 
-// STUXNET - Rewritten as a THRILLER
-const story: Story = {
-  title: "Stuxnet",
-  subtitle: "The World's First Cyber Weapon",
-  slides: [
-    // HOOK - Maximum drama
-    {
-      type: "text",
-      content: "Someone just <span class='highlight-red'>blew up</span> a nuclear facility",
-      subtext: "Without firing a single shot."
-    },
-    // IMPACT - Immediate consequence
-    {
-      type: "bigNumber",
-      number: "1,000",
-      label: "centrifuges — destroyed"
-    },
-    // MYSTERY - Build intrigue
-    {
-      type: "text",
-      content: "Iran's <span class='highlight-red'>nuclear program</span>",
-      subtext: "was under attack. They had no idea."
-    },
-    // THE WEAPON
-    {
-      type: "text",
-      content: "The weapon? <span class='highlight'>A USB stick.</span>",
-      subtext: ""
-    },
-    // THE HOW - Attack visualization (simple)
-    {
-      type: "network",
-      title: "It spread like a virus",
-      nodes: [
-        { id: "usb", label: "USB", x: 8, y: 50 },
-        { id: "pc", label: "PC", x: 30, y: 30, infected: true },
-        { id: "scada", label: "SCADA", x: 52, y: 50, infected: true },
-        { id: "plc", label: "PLC", x: 74, y: 30, infected: true },
-        { id: "centrifuge", label: "Target", x: 92, y: 50, infected: true }
-      ],
-      connections: [
-        { from: "usb", to: "pc", attack: true },
-        { from: "pc", to: "scada", attack: true },
-        { from: "scada", to: "plc", attack: true },
-        { from: "plc", to: "centrifuge", attack: true }
-      ]
-    },
-    // ANIMATED ATTACK FLOW - 5 stages
-    { type: "attackFlow", stage: 0 },
-    { type: "attackFlow", stage: 1 },
-    { type: "attackFlow", stage: 2 },
-    { type: "attackFlow", stage: 3 },
-    { type: "attackFlow", stage: 4 },
-    // THE DECEPTION
-    {
-      type: "text",
-      content: "It made centrifuges <span class='highlight-red'>tear themselves apart</span>",
-      subtext: "While screens showed: \"All systems normal.\""
-    },
-    // ARSENAL
-    {
-      type: "stats",
-      items: [
-        { value: "5", label: "Zero-Days Used" },
-        { value: "14", label: "Months Hidden" }
-      ]
-    },
-    // CLIFFHANGER
-    {
-      type: "text",
-      content: "This wasn't hackers.",
-      subtext: ""
-    },
-    // REVEAL
-    {
-      type: "text",
-      content: "This was <span class='highlight'>governments.</span>",
-      subtext: "USA + Israel. Codename: Olympic Games."
-    },
-    // LEGACY - Dramatic close
-    {
-      type: "text",
-      content: "<span class='highlight-purple'>Code</span> became a <span class='highlight-red'>weapon of war.</span>",
-      subtext: "And nothing was ever the same."
-    },
-    // TITLE CARD
-    {
-      type: "title",
-      title: "STUXNET",
-      subtitle: "The world's first cyber weapon • 2010"
-    }
-  ]
+// All Stories
+const stories: Record<string, Story> = {
+  stuxnet: {
+    id: "stuxnet",
+    title: "Stuxnet",
+    subtitle: "The World's First Cyber Weapon",
+    slides: [
+      {
+        type: "text",
+        content: "Someone just <span class='highlight-red'>blew up</span> a nuclear facility",
+        subtext: "Without firing a single shot."
+      },
+      {
+        type: "bigNumber",
+        number: "1,000",
+        label: "centrifuges — destroyed"
+      },
+      {
+        type: "text",
+        content: "Iran's <span class='highlight-red'>nuclear program</span>",
+        subtext: "was under attack. They had no idea."
+      },
+      {
+        type: "text",
+        content: "The weapon? <span class='highlight'>A USB stick.</span>",
+        subtext: ""
+      },
+      {
+        type: "network",
+        title: "It spread like a virus",
+        nodes: [
+          { id: "usb", label: "USB", x: 8, y: 50 },
+          { id: "pc", label: "PC", x: 30, y: 30, infected: true },
+          { id: "scada", label: "SCADA", x: 52, y: 50, infected: true },
+          { id: "plc", label: "PLC", x: 74, y: 30, infected: true },
+          { id: "centrifuge", label: "Target", x: 92, y: 50, infected: true }
+        ],
+        connections: [
+          { from: "usb", to: "pc", attack: true },
+          { from: "pc", to: "scada", attack: true },
+          { from: "scada", to: "plc", attack: true },
+          { from: "plc", to: "centrifuge", attack: true }
+        ]
+      },
+      { type: "attackFlow", stage: 0 },
+      { type: "attackFlow", stage: 1 },
+      { type: "attackFlow", stage: 2 },
+      { type: "attackFlow", stage: 3 },
+      { type: "attackFlow", stage: 4 },
+      {
+        type: "text",
+        content: "It made centrifuges <span class='highlight-red'>tear themselves apart</span>",
+        subtext: "While screens showed: \"All systems normal.\""
+      },
+      {
+        type: "stats",
+        items: [
+          { value: "5", label: "Zero-Days Used" },
+          { value: "14", label: "Months Hidden" }
+        ]
+      },
+      {
+        type: "text",
+        content: "This wasn't hackers.",
+        subtext: ""
+      },
+      {
+        type: "text",
+        content: "This was <span class='highlight'>governments.</span>",
+        subtext: "USA + Israel. Codename: Olympic Games."
+      },
+      {
+        type: "text",
+        content: "<span class='highlight-purple'>Code</span> became a <span class='highlight-red'>weapon of war.</span>",
+        subtext: "And nothing was ever the same."
+      },
+      {
+        type: "title",
+        title: "STUXNET",
+        subtitle: "The world's first cyber weapon • 2010"
+      }
+    ]
+  },
+  
+  coupang: {
+    id: "coupang",
+    title: "Coupang Breach",
+    subtitle: "South Korea's Biggest Data Leak",
+    slides: [
+      {
+        type: "title",
+        title: "THE COUPANG BREACH",
+        subtitle: "When the Insider Became the Threat"
+      },
+      {
+        type: "text",
+        content: "In late 2025, South Korea's largest e-commerce platform was breached...",
+        subtext: "By one of their own."
+      },
+      {
+        type: "map",
+        mapType: "korea-location",
+        title: "Seoul, South Korea",
+        subtitle: "Coupang Headquarters — Songpa District"
+      },
+      {
+        type: "bigNumber",
+        number: "33.7M",
+        label: "User accounts compromised"
+      },
+      {
+        type: "text",
+        content: "That's <span class='highlight-red'>65%</span> of South Korea's population",
+        subtext: "The largest data breach in the country's history"
+      },
+      {
+        type: "stats",
+        items: [
+          { value: "147", label: "Days Undetected" },
+          { value: "65%", label: "Population Affected" },
+          { value: "$1.18B", label: "Voucher Payout" },
+          { value: "1", label: "Insider" }
+        ]
+      },
+      {
+        type: "text",
+        content: "The perpetrator: <span class='highlight-red'>A former employee</span>",
+        subtext: "Someone who knew the systems inside and out"
+      },
+      {
+        type: "attackTree",
+        root: "Exfiltrate Customer Database",
+        phases: [
+          ["Privileged Access", "Data Collection", "Exfiltration"],
+          ["Employee Credentials", "Bulk Queries", "External Transfer"]
+        ]
+      },
+      {
+        type: "timeline",
+        title: "The 147-Day Breach",
+        events: [
+          { year: "July 2025", text: "Unauthorized access begins" },
+          { year: "Aug-Oct 2025", text: "Data silently exfiltrated over months" },
+          { year: "Nov 2025", text: "Breach finally detected by security team" },
+          { year: "Nov 30", text: "Public disclosure shocks the nation" },
+          { year: "Dec 2025", text: "Suspect flees South Korea" }
+        ]
+      },
+      {
+        type: "text",
+        content: "When investigators closed in, the suspect <span class='highlight-red'>vanished</span>",
+        subtext: "Disappearing across the Yellow Sea..."
+      },
+      {
+        type: "map",
+        mapType: "korea-china-flight",
+        title: "The Escape",
+        subtitle: "Seoul → Somewhere in China"
+      },
+      {
+        type: "text",
+        content: "Before fleeing, the suspect <span class='highlight-purple'>threw their laptop into a river</span>",
+        subtext: "Destroying evidence... or so they thought."
+      },
+      {
+        type: "text",
+        content: "Investigators <span class='highlight'>recovered the laptop</span> from the riverbed",
+        subtext: "Digital forensics never sleeps"
+      },
+      {
+        type: "stats",
+        items: [
+          { value: "CEO", label: "Resigned" },
+          { value: "₩1.7T", label: "Compensation Fund" },
+          { value: "0.03%", label: "Security Budget" },
+          { value: "∞", label: "Trust Lost" }
+        ]
+      },
+      {
+        type: "text",
+        content: "Coupang spent just <span class='highlight-red'>0.03%</span> of revenue on security",
+        subtext: "Far below industry standards"
+      },
+      {
+        type: "code",
+        title: "What They Took",
+        lines: [
+          { text: "// Customer data exfiltrated:", type: "comment" },
+          { text: "- Full names", type: "normal" },
+          { text: "- Phone numbers", type: "normal" },
+          { text: "- Email addresses", type: "normal" },
+          { text: "- Home addresses", type: "normal" },
+          { text: "- Order history", type: "normal" },
+          { text: "- Payment information (partial)", type: "normal" },
+          { text: "", type: "normal" },
+          { text: "// 33.7 million records", type: "comment" }
+        ]
+      },
+      {
+        type: "text",
+        content: "The breach sparked <span class='highlight-purple'>nationwide debate</span> about insider threats",
+        subtext: "And the true cost of underinvesting in security"
+      },
+      {
+        type: "title",
+        title: "LESSONS LEARNED",
+        subtitle: "Your biggest threat might already be inside"
+      }
+    ]
+  }
 };
 
-// Mobile Attack Stage V2 - Vertical chain with animated infection spread
+// Korea Location Map Component
+function KoreaLocationMap() {
+  return (
+    <svg className="map-svg" viewBox="0 0 400 350" preserveAspectRatio="xMidYMid meet">
+      {/* South Korea outline */}
+      <path className="country-path origin" d="
+        M 180 50
+        C 200 45, 220 50, 240 55
+        C 260 60, 275 75, 280 95
+        C 285 115, 290 140, 285 165
+        C 280 190, 270 220, 255 250
+        C 240 280, 220 300, 195 310
+        C 170 320, 145 315, 125 300
+        C 105 285, 95 260, 90 235
+        C 85 210, 90 180, 100 155
+        C 110 130, 125 105, 145 85
+        C 165 65, 175 55, 180 50
+        Z
+      "/>
+      
+      {/* Seoul marker with pulse */}
+      <circle className="location-pulse" cx="195" cy="95" r="8">
+        <animate attributeName="r" values="8;15;8" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle className="city-marker" cx="195" cy="95" r="6"/>
+      <text className="city-label" x="210" y="100">Seoul</text>
+      
+      {/* Coupang HQ indicator */}
+      <rect x="175" y="105" width="80" height="25" rx="4" fill="rgba(255,51,102,0.2)" stroke="var(--accent2)" strokeWidth="1"/>
+      <text x="215" y="122" fill="var(--text)" fontSize="10" textAnchor="middle">Coupang HQ</text>
+      
+      {/* Other cities */}
+      <circle cx="260" cy="180" r="4" fill="rgba(0,240,255,0.5)"/>
+      <text className="city-label" x="270" y="185" fontSize="10" fill="var(--text-dim)">Daegu</text>
+      
+      <circle cx="230" cy="260" r="4" fill="rgba(0,240,255,0.5)"/>
+      <text className="city-label" x="245" y="265" fontSize="10" fill="var(--text-dim)">Busan</text>
+      
+      {/* Sea labels */}
+      <text x="60" y="180" fill="var(--text-dim)" fontSize="11" fontStyle="italic">Yellow Sea</text>
+      <text x="310" y="140" fill="var(--text-dim)" fontSize="11" fontStyle="italic">East Sea</text>
+    </svg>
+  );
+}
+
+// Korea to China Flight Map Component
+function KoreaChinaFlightMap() {
+  return (
+    <svg className="map-svg" viewBox="0 0 500 350" preserveAspectRatio="xMidYMid meet">
+      {/* China outline */}
+      <path className="country-path highlight" d="
+        M 20 30
+        C 40 25, 80 20, 120 30
+        C 160 40, 180 60, 190 90
+        C 200 120, 195 150, 185 180
+        C 175 210, 160 240, 140 265
+        C 120 290, 95 305, 70 310
+        C 45 315, 25 310, 20 290
+        C 15 270, 15 240, 20 210
+        C 25 180, 30 150, 30 120
+        C 30 90, 25 60, 20 30
+        Z
+      "/>
+      <text x="90" y="170" fill="var(--text)" fontSize="16" fontWeight="600">CHINA</text>
+      
+      {/* Yellow Sea */}
+      <text x="200" y="200" fill="var(--accent)" fontSize="12" fontStyle="italic" opacity="0.6">Yellow Sea</text>
+      
+      {/* South Korea */}
+      <path className="country-path origin" d="
+        M 330 80
+        C 345 75, 360 80, 375 85
+        C 390 90, 400 100, 405 115
+        C 410 130, 412 150, 408 170
+        C 404 190, 395 215, 382 240
+        C 369 265, 352 285, 332 295
+        C 312 305, 290 300, 275 288
+        C 260 276, 252 258, 248 238
+        C 244 218, 248 195, 256 175
+        C 264 155, 277 135, 293 118
+        C 309 101, 322 85, 330 80
+        Z
+      "/>
+      <text x="320" y="185" fill="var(--text)" fontSize="14" fontWeight="600">KOREA</text>
+      
+      {/* Seoul marker */}
+      <circle className="location-pulse" cx="340" cy="118" r="6">
+        <animate attributeName="r" values="6;12;6" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle className="city-marker" cx="340" cy="118" r="5"/>
+      <text className="city-label" x="350" y="112" fontSize="11">Seoul</text>
+      
+      {/* Chinese destination */}
+      <circle cx="150" cy="180" r="5" fill="var(--accent2)" opacity="0.8"/>
+      <text x="115" y="200" fill="var(--text-dim)" fontSize="10">
+        <tspan x="115" dy="0">Destination</tspan>
+        <tspan x="115" dy="12">Unknown</tspan>
+      </text>
+      
+      {/* Flight path (animated) */}
+      <path className="flight-path" d="
+        M 340 118
+        Q 250 100 200 140
+        Q 170 160 150 180
+      ">
+        <animate 
+          attributeName="stroke-dashoffset" 
+          from="1000" 
+          to="0" 
+          dur="2s" 
+          fill="freeze"
+          begin="0.3s"
+        />
+      </path>
+      
+      {/* Arrow head */}
+      <polygon className="flight-arrow" points="150,180 158,172 162,182 152,186">
+        <animate 
+          attributeName="opacity" 
+          from="0" 
+          to="1" 
+          dur="0.3s" 
+          fill="freeze"
+          begin="2s"
+        />
+      </polygon>
+      
+      {/* Distance */}
+      <text x="240" y="90" fill="var(--accent2)" fontSize="11" fontWeight="600">~800 km</text>
+    </svg>
+  );
+}
+
+// Map Slide Component
+function MapSlide({ slide }: { slide: Slide }) {
+  return (
+    <div className="map-slide">
+      <h2 className="slide-subtitle mb-2">{slide.title}</h2>
+      <p className="slide-subtitle" style={{ fontSize: '14px', marginBottom: '20px' }}>{slide.subtitle}</p>
+      <div className="map-container">
+        {slide.mapType === 'korea-location' && <KoreaLocationMap />}
+        {slide.mapType === 'korea-china-flight' && <KoreaChinaFlightMap />}
+      </div>
+    </div>
+  );
+}
+
+// Mobile Attack Stage - Card-based vertical flow
 function MobileAttackStage({ stage }: { stage: number }) {
-  const [packetY, setPacketY] = useState(0);
-  const [showBurst, setShowBurst] = useState(false);
-  
-  useEffect(() => {
-    setPacketY(0);
-    setShowBurst(false);
-    const interval = setInterval(() => {
-      setPacketY(p => {
-        const next = p + 0.015;
-        if (next >= 0.95 && p < 0.95) setShowBurst(true);
-        return Math.min(1, next);
-      });
-    }, 25);
-    return () => clearInterval(interval);
-  }, [stage]);
-  
-  const allNodes = [
-    { icon: '💾', label: 'USB' },
-    { icon: '💻', label: 'PC' },
-    { icon: '🌐', label: 'NET' },
-    { icon: '🖥️', label: 'SCADA' },
-    { icon: '⚙️', label: 'PLC' },
-    { icon: '☢️', label: 'TARGET' },
+  const stages = [
+    { icon: '💾', from: 'USB Drive', to: '💻', toLabel: 'Engineer PC', title: 'USB INSERTION', desc: 'Infected USB planted by contractor' },
+    { icon: '💻', from: 'Engineer PC', to: '🌐', toLabel: 'Air-Gapped Network', title: 'INITIAL INFECTION', desc: 'Worm exploits Windows zero-days' },
+    { icon: '🌐', from: 'Network', to: '🖥️', toLabel: 'SCADA System', title: 'NETWORK SPREAD', desc: 'Propagates through shared drives' },
+    { icon: '🖥️', from: 'SCADA', to: '⚙️', toLabel: 'Siemens PLC', title: 'SCADA COMPROMISE', desc: 'Targets WinCC/Step 7 software' },
+    { icon: '⚙️', from: 'PLC', to: '☢️', toLabel: 'Centrifuges', title: 'PAYLOAD DELIVERY', desc: 'Injects malicious code into PLCs' },
   ];
   
-  const stageInfo = [
-    { title: 'USB INSERTION', desc: 'Infected USB planted' },
-    { title: 'INITIAL INFECTION', desc: 'Exploits zero-days' },
-    { title: 'NETWORK SPREAD', desc: 'Spreads via shares' },
-    { title: 'SCADA COMPROMISE', desc: 'Targets Siemens' },
-    { title: 'PAYLOAD DELIVERY', desc: 'Code injected' },
-  ];
+  const current = stages[stage];
   
   return (
-    <div className="vert-attack">
-      {/* Header */}
-      <div className="vert-header">
-        <span className="vert-stage-num">0{stage + 1}/05</span>
-        <h3 className="vert-title">{stageInfo[stage].title}</h3>
+    <div className="mobile-attack">
+      <div className="mobile-attack-header">
+        <span className="mobile-stage-num">STAGE {stage + 1}/5</span>
+        <h3 className="mobile-stage-title">{current.title}</h3>
       </div>
       
-      {/* Vertical node chain */}
-      <div className="vert-chain">
-        {allNodes.map((node, i) => {
-          const isInfected = i <= stage;
-          const isSource = i === stage;
-          const isTarget = i === stage + 1;
-          const showConnection = i < allNodes.length - 1;
-          const isActiveConnection = i === stage;
-          
-          return (
-            <div key={i} className="vert-node-group">
-              {/* Node */}
-              <div className={`vert-node ${isInfected ? 'infected' : ''} ${isSource ? 'source' : ''} ${isTarget ? 'target' : ''}`}>
-                {isSource && <div className="vert-pulse-ring" />}
-                {isTarget && <div className="vert-scan-ring" />}
-                {isTarget && showBurst && (
-                  <>
-                    <div className="vert-burst burst-1" />
-                    <div className="vert-burst burst-2" />
-                  </>
-                )}
-                <span className="vert-icon">{node.icon}</span>
-                <span className="vert-label">{node.label}</span>
-              </div>
-              
-              {/* Connection line */}
-              {showConnection && (
-                <div className={`vert-conn ${isActiveConnection ? 'active' : ''} ${i < stage ? 'complete' : ''}`}>
-                  <div className="vert-conn-line" />
-                  {isActiveConnection && (
-                    <div className="vert-packet" style={{ top: `${packetY * 100}%` }}>
-                      <div className="packet-core" />
-                      <div className="packet-trail" />
-                    </div>
-                  )}
-                  {i < stage && (
-                    <div className="vert-data-flow">
-                      <div className="flow-dot dot-1" />
-                      <div className="flow-dot dot-2" />
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
+      <div className="mobile-attack-visual">
+        <div className="mobile-node source">
+          <span className="mobile-node-icon">{current.icon}</span>
+          <span className="mobile-node-label">{current.from}</span>
+        </div>
+        
+        <div className="mobile-arrow">
+          <div className="mobile-arrow-line" />
+          <div className="mobile-arrow-pulse" />
+          <span className="mobile-arrow-icon">▼</span>
+        </div>
+        
+        <div className="mobile-node target">
+          <span className="mobile-node-icon">{current.to}</span>
+          <span className="mobile-node-label">{current.toLabel}</span>
+        </div>
       </div>
       
-      {/* Description */}
-      <p className="vert-desc">{stageInfo[stage].desc}</p>
+      <p className="mobile-stage-desc">{current.desc}</p>
       
-      {/* Progress bar */}
-      <div className="vert-progress">
-        {stageInfo.map((_, i) => (
-          <div key={i} className={`vert-seg ${i < stage ? 'done' : ''} ${i === stage ? 'active' : ''}`} />
+      <div className="mobile-progress">
+        {stages.map((_, i) => (
+          <div key={i} className={`mobile-progress-dot ${i <= stage ? 'active' : ''} ${i === stage ? 'current' : ''}`} />
         ))}
       </div>
     </div>
   );
 }
 
-// Desktop Attack Stage - Enhanced network diagram with electric pulses and ripples
+// Desktop Attack Stage - Network diagram with packet animation
 function DesktopAttackStage({ stage }: { stage: number }) {
   const [packetProgress, setPacketProgress] = useState(0);
-  const [showRipple, setShowRipple] = useState(false);
-  const [trailPositions, setTrailPositions] = useState<{x: number, y: number, age: number}[]>([]);
   const prevStageRef = useRef(stage);
   
-  // Define nodes and stageInfo FIRST (before useEffect uses them)
+  useEffect(() => {
+    if (prevStageRef.current !== stage) {
+      setPacketProgress(0);
+      prevStageRef.current = stage;
+    }
+    const interval = setInterval(() => {
+      setPacketProgress(p => Math.min(1, p + 0.015));
+    }, 30);
+    return () => clearInterval(interval);
+  }, [stage]);
+  
   const nodes = [
-    { id: 'usb', label: 'USB', x: 10, y: 75, icon: '💾' },
-    { id: 'laptop', label: 'PC', x: 27, y: 30, icon: '💻' },
-    { id: 'network', label: 'NETWORK', x: 44, y: 75, icon: '🌐' },
-    { id: 'scada', label: 'SCADA', x: 61, y: 30, icon: '🖥️' },
-    { id: 'plc', label: 'PLC', x: 78, y: 75, icon: '⚙️' },
-    { id: 'centrifuge', label: 'TARGET', x: 93, y: 30, icon: '☢️' },
+    { id: 'usb', label: 'USB Drive', x: 6, y: 70, icon: '💾' },
+    { id: 'laptop', label: 'Engineer PC', x: 23, y: 30, icon: '💻' },
+    { id: 'network', label: 'Air-Gapped', x: 41, y: 70, icon: '🌐' },
+    { id: 'scada', label: 'SCADA', x: 59, y: 30, icon: '🖥️' },
+    { id: 'plc', label: 'PLC', x: 77, y: 70, icon: '⚙️' },
+    { id: 'centrifuge', label: 'Centrifuges', x: 94, y: 30, icon: '☢️' },
   ];
   
   const stageInfo = [
     { title: "USB INSERTION", desc: "Infected USB planted by contractor", from: 0, to: 1 },
     { title: "INITIAL INFECTION", desc: "Worm exploits Windows zero-days", from: 1, to: 2 },
-    { title: "NETWORK SPREAD", desc: "Propagates via shared drives", from: 2, to: 3 },
+    { title: "NETWORK SPREAD", desc: "Propagates through shared drives", from: 2, to: 3 },
     { title: "SCADA COMPROMISE", desc: "Targets WinCC/Step 7 software", from: 3, to: 4 },
-    { title: "PAYLOAD DELIVERY", desc: "Malicious code injected into PLCs", from: 4, to: 5 },
+    { title: "PAYLOAD DELIVERY", desc: "Injects malicious code into PLCs", from: 4, to: 5 },
   ];
-  
-  useEffect(() => {
-    if (prevStageRef.current !== stage) {
-      setPacketProgress(0);
-      setShowRipple(false);
-      setTrailPositions([]);
-      prevStageRef.current = stage;
-    }
-    
-    const interval = setInterval(() => {
-      setPacketProgress(p => {
-        const newP = Math.min(1, p + 0.012);
-        // Trigger ripple when packet arrives
-        if (newP >= 0.95 && p < 0.95) {
-          setShowRipple(true);
-        }
-        return newP;
-      });
-    }, 25);
-    return () => clearInterval(interval);
-  }, [stage]);
-  
-  // Trail effect
-  useEffect(() => {
-    const trailInterval = setInterval(() => {
-      setTrailPositions(prev => {
-        const aged = prev.map(p => ({ ...p, age: p.age + 1 })).filter(p => p.age < 8);
-        if (packetProgress < 0.98) {
-          const fromNode = nodes[stageInfo[stage]?.from || 0];
-          const toNode = nodes[stageInfo[stage]?.to || 1];
-          const x = fromNode.x + (toNode.x - fromNode.x) * packetProgress;
-          const y = fromNode.y + (toNode.y - fromNode.y) * packetProgress;
-          return [...aged, { x, y, age: 0 }];
-        }
-        return aged;
-      });
-    }, 50);
-    return () => clearInterval(trailInterval);
-  }, [packetProgress, stage, nodes, stageInfo]);
   
   const currentStage = stageInfo[stage] || stageInfo[0];
   const fromNode = nodes[currentStage.from];
@@ -326,165 +508,58 @@ function DesktopAttackStage({ stage }: { stage: number }) {
   const packetY = fromNode.y + (toNode.y - fromNode.y) * packetProgress;
   
   return (
-    <div className="attack-flow-v2">
-      <div className="attack-header-v2">
-        <div className="stage-badge">
-          <span className="stage-num">0{stage + 1}</span>
-          <span className="stage-divider">/</span>
-          <span className="stage-total">05</span>
-        </div>
-        <h3 className="stage-title-v2">{currentStage.title}</h3>
-        <p className="stage-desc-v2">{currentStage.desc}</p>
+    <div className="attack-flow">
+      <div className="attack-header">
+        <span className="attack-stage-num">STAGE {stage + 1}/5</span>
+        <h3 className="attack-stage-title">{currentStage.title}</h3>
+        <p className="attack-stage-desc">{currentStage.desc}</p>
       </div>
       
-      <div className="attack-diagram-v2">
-        {/* SVG for paths and effects */}
-        <svg className="attack-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <defs>
-            {/* Glow filter for active paths */}
-            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-            {/* Electric pulse gradient */}
-            <linearGradient id="pulseGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="transparent"/>
-              <stop offset="40%" stopColor="#ff3366"/>
-              <stop offset="50%" stopColor="#ffffff"/>
-              <stop offset="60%" stopColor="#ff3366"/>
-              <stop offset="100%" stopColor="transparent"/>
-            </linearGradient>
-          </defs>
-          
-          {/* Background grid lines for cyber effect */}
-          <g className="cyber-grid" opacity="0.1">
-            {[20, 40, 60, 80].map(y => (
-              <line key={`h${y}`} x1="0" y1={y} x2="100" y2={y} stroke="#00f0ff" strokeWidth="0.2"/>
-            ))}
-            {[20, 40, 60, 80].map(x => (
-              <line key={`v${x}`} x1={x} y1="0" x2={x} y2="100" stroke="#00f0ff" strokeWidth="0.2"/>
-            ))}
-          </g>
-          
-          {/* Connection paths */}
+      <div className="attack-diagram">
+        <svg className="attack-paths" viewBox="0 0 100 100" preserveAspectRatio="none">
           {nodes.slice(0, -1).map((node, i) => {
             const next = nodes[i + 1];
-            const isActive = i < stage;
+            const isActive = i <= stage;
             const isCurrent = i === stage;
-            const isPending = i > stage;
             return (
-              <g key={i}>
-                {/* Base path */}
-                <line
-                  x1={node.x} y1={node.y}
-                  x2={next.x} y2={next.y}
-                  className={`path-base ${isActive ? 'completed' : ''} ${isCurrent ? 'active' : ''} ${isPending ? 'pending' : ''}`}
-                />
-                {/* Animated dashes for active path */}
-                {isCurrent && (
-                  <line
-                    x1={node.x} y1={node.y}
-                    x2={next.x} y2={next.y}
-                    className="path-electric"
-                    filter="url(#glow)"
-                  />
-                )}
-                {/* Data flow particles on completed paths */}
-                {isActive && (
-                  <circle r="0.8" className="data-particle">
-                    <animateMotion
-                      dur="2s"
-                      repeatCount="indefinite"
-                      path={`M${node.x},${node.y} L${next.x},${next.y}`}
-                    />
-                  </circle>
-                )}
-              </g>
+              <line
+                key={i}
+                x1={node.x}
+                y1={node.y}
+                x2={next.x}
+                y2={next.y}
+                className={`attack-path-line ${isActive ? 'active' : ''} ${isCurrent ? 'current' : ''}`}
+              />
             );
           })}
         </svg>
         
-        {/* Trail particles */}
-        {trailPositions.map((pos, i) => (
-          <div
-            key={i}
-            className="packet-trail"
-            style={{
-              left: `${pos.x}%`,
-              top: `${pos.y}%`,
-              opacity: 1 - (pos.age / 8),
-              transform: `translate(-50%, -50%) scale(${1 - (pos.age / 10)})`,
-            }}
-          />
-        ))}
+        <div
+          className="attack-packet"
+          style={{
+            left: `${packetX}%`,
+            top: `${packetY}%`,
+          }}
+        />
         
-        {/* Main packet */}
-        {packetProgress < 0.98 && (
-          <div
-            className="attack-packet-v2"
-            style={{
-              left: `${packetX}%`,
-              top: `${packetY}%`,
-            }}
-          >
-            <div className="packet-core" />
-            <div className="packet-ring packet-ring-1" />
-            <div className="packet-ring packet-ring-2" />
-            <div className="packet-glow" />
-          </div>
-        )}
-        
-        {/* Nodes */}
         {nodes.map((node, i) => {
           const isInfected = i <= stage;
           const isTarget = i === stage + 1;
           const isSource = i === stage;
-          const isCurrentTarget = i === stage + 1 && showRipple;
           return (
             <div
               key={node.id}
-              className={`node-v2 ${isInfected ? 'infected' : ''} ${isTarget ? 'target' : ''} ${isSource ? 'source' : ''}`}
+              className={`attack-node ${isInfected ? 'infected' : ''} ${isTarget ? 'target' : ''} ${isSource ? 'source' : ''}`}
               style={{
                 left: `${node.x}%`,
                 top: `${node.y}%`,
               }}
             >
-              {/* Ripple effect on infection */}
-              {isCurrentTarget && (
-                <>
-                  <div className="infection-ripple ripple-1" />
-                  <div className="infection-ripple ripple-2" />
-                  <div className="infection-ripple ripple-3" />
-                </>
-              )}
-              {/* Scanning effect on target */}
-              {isTarget && !isCurrentTarget && (
-                <div className="scan-ring" />
-              )}
-              {/* Pulse rings for infected nodes */}
-              {isInfected && (
-                <div className="infected-pulse" />
-              )}
-              {/* Node content */}
-              <div className="node-icon-wrap">
-                <span className="node-icon-v2">{node.icon}</span>
-              </div>
-              <span className="node-label-v2">{node.label}</span>
+              <span className="attack-node-icon">{node.icon}</span>
+              <span className="attack-node-label">{node.label}</span>
             </div>
           );
         })}
-      </div>
-      
-      {/* Progress bar */}
-      <div className="attack-progress-bar">
-        {stageInfo.map((_, i) => (
-          <div key={i} className={`progress-segment ${i < stage ? 'complete' : ''} ${i === stage ? 'active' : ''}`}>
-            <div className="segment-fill" style={{ width: i === stage ? `${packetProgress * 100}%` : i < stage ? '100%' : '0%' }} />
-          </div>
-        ))}
       </div>
     </div>
   );
@@ -564,7 +639,6 @@ function ParticleNetwork() {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Update and draw particles
       particles.forEach((p, i) => {
         p.x += p.vx;
         p.y += p.vy;
@@ -577,7 +651,6 @@ function ParticleNetwork() {
         ctx.fillStyle = 'rgba(0, 240, 255, 0.5)';
         ctx.fill();
         
-        // Draw connections
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dx = p.x - p2.x;
@@ -612,15 +685,17 @@ function ParticleNetwork() {
 }
 
 export default function Home() {
+  const [currentStory, setCurrentStory] = useState<string>("stuxnet");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [ratio, setRatio] = useState<"16:9" | "9:16">("16:9");
   const [animationKey, setAnimationKey] = useState(0);
   const [isSmallViewport, setIsSmallViewport] = useState(false);
   
+  const story = stories[currentStory];
+  
   // Detect small viewport for compact mode
   useEffect(() => {
     const checkSize = () => {
-      // Use compact mode when viewport width < 500px and in 16:9 mode
       setIsSmallViewport(window.innerWidth < 500);
     };
     checkSize();
@@ -632,13 +707,18 @@ export default function Home() {
     if (index >= 0 && index < story.slides.length) {
       const prevSlide = story.slides[currentSlide];
       const nextSlide = story.slides[index];
-      // Only update animation key when changing slide TYPES (not same-type transitions like attackFlow stages)
       if (prevSlide.type !== nextSlide.type) {
         setAnimationKey(prev => prev + 1);
       }
       setCurrentSlide(index);
     }
-  }, [currentSlide]);
+  }, [currentSlide, story.slides]);
+
+  const switchStory = useCallback((storyId: string) => {
+    setCurrentStory(storyId);
+    setCurrentSlide(0);
+    setAnimationKey(prev => prev + 1);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -725,7 +805,6 @@ export default function Home() {
         );
 
       case "network":
-        // Simple horizontal flow - no complex positioning
         return (
           <div className="slide-content" key={animationKey}>
             <h2 className="slide-subtitle mb-6">{slide.title}</h2>
@@ -792,6 +871,13 @@ export default function Home() {
           </div>
         );
 
+      case "map":
+        return (
+          <div className="slide-content" key={animationKey}>
+            <MapSlide slide={slide} />
+          </div>
+        );
+
       default:
         return null;
     }
@@ -799,6 +885,17 @@ export default function Home() {
 
   return (
     <div className="player-container">
+      {/* Story Selector */}
+      <div className="story-selector">
+        <select 
+          value={currentStory} 
+          onChange={(e) => switchStory(e.target.value)}
+        >
+          <option value="stuxnet">🦠 Stuxnet</option>
+          <option value="coupang">🛒 Coupang Breach</option>
+        </select>
+      </div>
+      
       {/* Ratio Controls */}
       <div className="controls">
         <button
