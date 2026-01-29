@@ -33,6 +33,7 @@ interface TimelineEvent {
 interface CodeLine {
   text: string;
   type: string;
+  delay?: number;
 }
 
 interface TerminalLine {
@@ -82,167 +83,87 @@ const stories: Record<string, Story> = {
     subtitle: "How Hackers Get Remote Access",
     slides: [
       {
-        type: "title",
-        title: "REVERSE SHELL",
-        subtitle: "How Hackers Bypass Firewalls"
+        type: "hackerTitle",
+        title: "REVERSE_SHELL",
+        subtitle: "// How hackers bypass your firewall"
       },
       {
-        type: "text",
-        content: "What if the <span class='highlight-red'>victim</span> connects to <span class='highlight'>you</span>?",
-        subtext: "Instead of you connecting to them."
+        type: "hackerText",
+        content: "What if the <span class='glow-red'>victim</span> connects to <span class='glow-green'>you</span>?",
+        subtext: "The attacker never touches the firewall."
       },
       {
-        type: "text",
-        content: "That's a <span class='highlight'>Reverse Shell</span>",
-        subtext: "The target initiates the connection outward."
+        type: "hackerText",
+        content: "Firewalls block <span class='glow-red'>INBOUND</span>",
+        subtext: "But outbound? That's usually trusted..."
       },
       {
-        type: "bigNumber",
-        number: "🔥",
-        label: "Bypasses inbound firewall rules"
+        type: "hackerText",
+        content: "<span class='glow-green'>REVERSE SHELL</span>",
+        subtext: "Target initiates. Firewall allows. Attacker wins."
       },
+      { type: "hackerStage", stage: 0 },
+      { type: "hackerStage", stage: 1 },
+      { type: "hackerStage", stage: 2 },
+      { type: "hackerStage", stage: 3 },
+      { type: "hackerStage", stage: 4 },
+      { type: "hackerStage", stage: 5 },
+      { type: "hackerStage", stage: 6 },
+      { type: "hackerStage", stage: 7 },
       {
-        type: "network",
-        title: "Normal Shell vs Reverse Shell",
-        nodes: [
-          { id: "attacker", label: "Attacker", x: 15, y: 50 },
-          { id: "firewall", label: "🧱 Firewall", x: 50, y: 50 },
-          { id: "victim", label: "Victim", x: 85, y: 50, infected: true }
-        ],
-        connections: [
-          { from: "attacker", to: "firewall", attack: true },
-          { from: "firewall", to: "victim" }
-        ]
-      },
-      {
-        type: "text",
-        content: "Firewalls <span class='highlight-red'>block</span> incoming connections",
-        subtext: "But they usually allow outgoing traffic..."
-      },
-      {
-        type: "network",
-        title: "Reverse Shell: Victim Connects Out",
-        nodes: [
-          { id: "victim", label: "Victim", x: 15, y: 50, infected: true },
-          { id: "firewall", label: "🧱 Firewall", x: 50, y: 50 },
-          { id: "attacker", label: "Attacker", x: 85, y: 50 }
-        ],
-        connections: [
-          { from: "victim", to: "firewall", attack: true },
-          { from: "firewall", to: "attacker", attack: true }
-        ]
-      },
-      {
-        type: "text",
-        content: "Outbound traffic = <span class='highlight'>Trusted</span>",
-        subtext: "The connection looks legitimate to the firewall."
-      },
-      { type: "reverseShellFlow", stage: 0 },
-      { type: "reverseShellFlow", stage: 1 },
-      { type: "reverseShellFlow", stage: 2 },
-      { type: "reverseShellFlow", stage: 3 },
-      {
-        type: "terminal",
-        title: "Step 1: Attacker Listens",
-        terminals: [
-          {
-            title: "ATTACKER",
-            side: "attacker",
-            lines: [
-              { text: "┌──(attacker)─[~]", type: "prompt" },
-              { text: " listener --port 4444", type: "command" },
-              { text: "[*] Waiting for incoming connection...", type: "output", delay: 800 }
-            ]
-          }
-        ]
-      },
-      {
-        type: "terminal",
-        title: "Step 2: Victim Executes Payload",
-        terminals: [
-          {
-            title: "VICTIM (Target Server)",
-            side: "victim",
-            lines: [
-              { text: "user@server:~$", type: "prompt" },
-              { text: " ./malicious_script.sh", type: "command" },
-              { text: "# (payload connects back to attacker)", type: "comment", delay: 400 }
-            ]
-          }
-        ]
-      },
-      {
-        type: "terminal",
-        title: "Step 3: Connection Established!",
-        terminals: [
-          {
-            title: "ATTACKER",
-            side: "attacker",
-            lines: [
-              { text: "[*] Waiting for incoming connection...", type: "output" },
-              { text: "[+] Connection received from 10.10.10.100", type: "success", delay: 500 },
-              { text: "[+] Shell session opened!", type: "success", delay: 300 },
-              { text: "", type: "output", delay: 200 },
-              { text: "victim$", type: "prompt", delay: 300 },
-              { text: " whoami", type: "command", delay: 200 },
-              { text: "webuser", type: "output", delay: 400 },
-              { text: "victim$", type: "prompt", delay: 200 },
-              { text: " hostname", type: "command", delay: 200 },
-              { text: "prod-server-01", type: "output", delay: 400 },
-              { text: "victim$", type: "prompt", delay: 200 },
-              { text: " pwd", type: "command", delay: 200 },
-              { text: "/var/www/html", type: "output", delay: 300 }
-            ]
-          }
-        ]
-      },
-      {
-        type: "code",
-        title: "How Reverse Shells Work",
+        type: "hackerTerminal",
+        title: "ATTACKER TERMINAL",
         lines: [
-          { text: "// The victim's machine does this:", type: "comment" },
-          { text: "", type: "normal" },
-          { text: "1. Open TCP connection TO attacker", type: "normal" },
-          { text: "2. Redirect STDIN  → socket", type: "normal" },
-          { text: "3. Redirect STDOUT → socket", type: "normal" },
-          { text: "4. Redirect STDERR → socket", type: "normal" },
-          { text: "5. Spawn interactive shell", type: "normal" },
-          { text: "", type: "normal" },
-          { text: "// Result: attacker types, victim executes", type: "comment" },
-          { text: "// See: HackTricks, PayloadsAllTheThings", type: "comment" }
+          { text: "root@kali:~# ", type: "prompt" },
+          { text: "listener --port 4444", type: "command" },
+          { text: "[*] Listening on 0.0.0.0:4444...", type: "output", delay: 600 },
+          { text: "[+] Connection from 10.10.10.50:52413", type: "success", delay: 1200 },
+          { text: "[+] Shell session established!", type: "success", delay: 400 },
+          { text: "", type: "output", delay: 200 },
+          { text: "target$ ", type: "prompt", delay: 300 },
+          { text: "whoami", type: "command" },
+          { text: "www-data", type: "output", delay: 500 },
+          { text: "target$ ", type: "prompt", delay: 200 },
+          { text: "hostname", type: "command" },
+          { text: "PROD-WEB-01", type: "output", delay: 500 },
+          { text: "target$ ", type: "prompt", delay: 200 },
+          { text: "id", type: "command" },
+          { text: "uid=33(www-data) gid=33(www-data)", type: "output", delay: 500 }
         ]
       },
       {
-        type: "stats",
+        type: "hackerStats",
         items: [
           { value: "4444", label: "Classic Port" },
-          { value: "443", label: "Stealthy (HTTPS)" },
-          { value: "53", label: "Sneaky (DNS)" },
-          { value: "80", label: "Common (HTTP)" }
+          { value: "443", label: "Looks like HTTPS" },
+          { value: "53", label: "Looks like DNS" },
+          { value: "80", label: "Looks like HTTP" }
         ]
       },
       {
-        type: "text",
-        content: "<span class='highlight-purple'>Defense:</span> Monitor outbound connections",
-        subtext: "Egress filtering and anomaly detection."
-      },
-      {
-        type: "attackTree",
-        root: "Establish Reverse Shell",
-        phases: [
-          ["Reconnaissance", "Delivery", "Execution"],
-          ["Find Open Port", "Phishing/Exploit", "Payload Runs"]
+        type: "hackerCode",
+        title: "THE MECHANISM",
+        lines: [
+          { text: "// What happens on the victim:", type: "comment" },
+          { text: "", type: "normal" },
+          { text: "1. CREATE socket connection", type: "normal" },
+          { text: "2. CONNECT to attacker IP:PORT", type: "normal" },
+          { text: "3. REDIRECT stdin  → socket", type: "normal" },
+          { text: "4. REDIRECT stdout → socket", type: "normal" },
+          { text: "5. SPAWN /bin/sh", type: "normal" },
+          { text: "", type: "normal" },
+          { text: "// Attacker types. Victim executes.", type: "comment" }
         ]
       },
       {
-        type: "text",
-        content: "Reverse shells are <span class='highlight-red'>everywhere</span>",
-        subtext: "Used in CTFs, penetration testing, and real attacks."
+        type: "hackerText",
+        content: "<span class='glow-amber'>DEFENSE</span>",
+        subtext: "Monitor outbound connections. Egress filtering. EDR."
       },
       {
-        type: "title",
-        title: "KEY TAKEAWAYS",
-        subtitle: "Victim connects out • Bypasses firewalls • Monitor egress traffic"
+        type: "hackerTitle",
+        title: "ACCESS_GRANTED",
+        subtitle: "// Victim connects out • Firewall bypassed • Game over"
       }
     ]
   },
@@ -1087,6 +1008,251 @@ function AttackStage({ stage, isMobile = false, isCompact = false }: { stage: nu
   return <DesktopAttackStage stage={stage} />;
 }
 
+// Matrix Rain Background Component (for Reverse Shell theme)
+function MatrixRain() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    let animationId: number;
+    
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    
+    resize();
+    
+    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF';
+    const fontSize = 14;
+    const columns = Math.floor(canvas.width / fontSize);
+    const drops: number[] = Array(columns).fill(1);
+    
+    const draw = () => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.fillStyle = '#00ff41';
+      ctx.font = `${fontSize}px monospace`;
+      
+      for (let i = 0; i < drops.length; i++) {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        
+        // Brighter leading character
+        ctx.fillStyle = Math.random() > 0.98 ? '#fff' : '#00ff41';
+        ctx.globalAlpha = Math.random() * 0.5 + 0.3;
+        ctx.fillText(char, x, y);
+        ctx.globalAlpha = 1;
+        
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+      
+      animationId = requestAnimationFrame(draw);
+    };
+    
+    draw();
+    window.addEventListener('resize', resize);
+    
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+  
+  return <canvas ref={canvasRef} className="matrix-canvas" />;
+}
+
+// Glitch Text Component
+function GlitchText({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <span className={`glitch-text ${className}`} data-text={children}>
+      {children}
+    </span>
+  );
+}
+
+// Hacker Terminal with enhanced typing effect
+function HackerTerminal({ lines, title, isActive = true }: { 
+  lines: { text: string; type: string; delay?: number }[];
+  title: string;
+  isActive?: boolean;
+}) {
+  const [displayedLines, setDisplayedLines] = useState<{ text: string; type: string }[]>([]);
+  const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
+  
+  useEffect(() => {
+    if (!isActive) {
+      setDisplayedLines([]);
+      setCurrentLineIndex(0);
+      setCurrentCharIndex(0);
+      return;
+    }
+    
+    if (currentLineIndex >= lines.length) return;
+    
+    const currentLine = lines[currentLineIndex];
+    const isCommand = currentLine.type === 'command';
+    const baseDelay = currentLine.delay || 0;
+    
+    if (isCommand) {
+      // Type character by character for commands
+      if (currentCharIndex < currentLine.text.length) {
+        const timer = setTimeout(() => {
+          setDisplayedLines(prev => {
+            const newLines = [...prev];
+            if (newLines.length === currentLineIndex) {
+              newLines.push({ text: '', type: currentLine.type });
+            }
+            newLines[currentLineIndex] = {
+              text: currentLine.text.slice(0, currentCharIndex + 1),
+              type: currentLine.type
+            };
+            return newLines;
+          });
+          setCurrentCharIndex(prev => prev + 1);
+        }, 25 + Math.random() * 35);
+        return () => clearTimeout(timer);
+      } else {
+        // Command finished typing, move to next line
+        const timer = setTimeout(() => {
+          setCurrentLineIndex(prev => prev + 1);
+          setCurrentCharIndex(0);
+        }, 150);
+        return () => clearTimeout(timer);
+      }
+    } else {
+      // Instant display for non-commands
+      const timer = setTimeout(() => {
+        setDisplayedLines(prev => [...prev, { text: currentLine.text, type: currentLine.type }]);
+        setCurrentLineIndex(prev => prev + 1);
+        setCurrentCharIndex(0);
+      }, baseDelay + 50);
+      return () => clearTimeout(timer);
+    }
+  }, [isActive, currentLineIndex, currentCharIndex, lines]);
+  
+  const isTyping = currentLineIndex < lines.length && lines[currentLineIndex]?.type === 'command';
+  
+  return (
+    <div className="hacker-terminal">
+      <div className="hacker-terminal-header">
+        <div className="hacker-terminal-dots">
+          <span className="dot red" />
+          <span className="dot yellow" />
+          <span className="dot green" />
+        </div>
+        <span className="hacker-terminal-title">{title}</span>
+      </div>
+      <div className="hacker-terminal-body">
+        {displayedLines.map((line, i) => (
+          <div key={i} className={`hacker-line ${line.type}`}>
+            {line.text}
+          </div>
+        ))}
+        {isTyping && <span className="hacker-cursor">█</span>}
+      </div>
+      <div className="scanlines" />
+    </div>
+  );
+}
+
+// 8-Stage Reverse Shell Attack Animation
+function ReverseShellStages({ stage }: { stage: number }) {
+  const stages = [
+    { id: 'recon', icon: '🔍', title: 'RECONNAISSANCE', desc: 'Scanning target network for open services', visual: 'scan' },
+    { id: 'listen', icon: '📡', title: 'OPEN LISTENER', desc: 'Attacker opens port and waits', visual: 'listen' },
+    { id: 'craft', icon: '⚙️', title: 'CRAFT PAYLOAD', desc: 'Building the reverse shell payload', visual: 'craft' },
+    { id: 'deliver', icon: '📧', title: 'DELIVER PAYLOAD', desc: 'Payload reaches target via exploit/phishing', visual: 'deliver' },
+    { id: 'execute', icon: '▶️', title: 'EXECUTE', desc: 'Victim unknowingly runs malicious code', visual: 'execute' },
+    { id: 'connect', icon: '🔗', title: 'OUTBOUND CONNECTION', desc: 'Target connects BACK to attacker', visual: 'connect' },
+    { id: 'shell', icon: '💻', title: 'SHELL ACCESS', desc: 'Interactive command line established', visual: 'shell' },
+    { id: 'pwned', icon: '💀', title: 'SYSTEM COMPROMISED', desc: 'Attacker has full remote access', visual: 'pwned' },
+  ];
+  
+  const current = stages[stage];
+  
+  return (
+    <div className="rs-stages">
+      <div className="rs-stages-header">
+        <div className="rs-stage-counter">
+          <span className="rs-stage-num">{String(stage + 1).padStart(2, '0')}</span>
+          <span className="rs-stage-total">/ 08</span>
+        </div>
+        <GlitchText className="rs-stages-title">{current.title}</GlitchText>
+        <p className="rs-stages-desc">{current.desc}</p>
+      </div>
+      
+      <div className="rs-stages-visual">
+        <div className={`rs-visual-icon ${current.visual}`}>
+          <span>{current.icon}</span>
+        </div>
+        
+        <div className="rs-stages-progress">
+          {stages.map((s, i) => (
+            <div 
+              key={s.id} 
+              className={`rs-progress-node ${i < stage ? 'completed' : ''} ${i === stage ? 'active' : ''}`}
+            >
+              <div className="rs-progress-dot" />
+              {i < stages.length - 1 && (
+                <div className={`rs-progress-line ${i < stage ? 'completed' : ''}`} />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="rs-network-visual">
+        <div className={`rs-node attacker ${stage >= 1 ? 'active' : ''}`}>
+          <span className="rs-node-icon">🎭</span>
+          <span className="rs-node-label">ATTACKER</span>
+          {stage >= 1 && <span className="rs-node-port">:4444</span>}
+        </div>
+        
+        <div className="rs-connection-line">
+          <svg viewBox="0 0 200 40" className="rs-line-svg">
+            <path 
+              d="M 10 20 L 190 20" 
+              className={`rs-path ${stage >= 5 ? 'active' : ''} ${stage >= 6 ? 'connected' : ''}`}
+            />
+            {stage >= 3 && stage < 6 && (
+              <circle className="rs-packet outbound" r="4">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 10 20 L 190 20" />
+              </circle>
+            )}
+            {stage >= 5 && (
+              <circle className="rs-packet inbound" r="4">
+                <animateMotion dur="1s" repeatCount="indefinite" path="M 190 20 L 10 20" />
+              </circle>
+            )}
+          </svg>
+          <div className="rs-firewall-icon">
+            <span>🧱</span>
+            <span className="rs-firewall-status">{stage >= 5 ? 'BYPASSED' : 'ACTIVE'}</span>
+          </div>
+        </div>
+        
+        <div className={`rs-node victim ${stage >= 4 ? 'infected' : ''} ${stage >= 7 ? 'pwned' : ''}`}>
+          <span className="rs-node-icon">{stage >= 7 ? '💀' : '🖥️'}</span>
+          <span className="rs-node-label">TARGET</span>
+          {stage >= 4 && <span className="rs-node-status">{stage >= 7 ? 'PWNED' : 'INFECTED'}</span>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Particle Network Background Component
 function ParticleNetwork() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -1376,6 +1542,69 @@ export default function Home() {
           </div>
         );
 
+      // Hacker theme slide types
+      case "hackerTitle":
+        return (
+          <div className="slide-content hacker-slide" key={animationKey}>
+            <GlitchText className="hacker-title">{slide.title}</GlitchText>
+            <p className="hacker-subtitle">{slide.subtitle}</p>
+          </div>
+        );
+
+      case "hackerText":
+        return (
+          <div className="slide-content hacker-slide" key={animationKey}>
+            <p className="hacker-text" dangerouslySetInnerHTML={{ __html: slide.content || "" }} />
+            {slide.subtext && <p className="hacker-subtext">{slide.subtext}</p>}
+          </div>
+        );
+
+      case "hackerStage":
+        return (
+          <div className="slide-content hacker-slide" key={animationKey}>
+            <ReverseShellStages stage={slide.stage || 0} />
+          </div>
+        );
+
+      case "hackerTerminal":
+        return (
+          <div className="slide-content hacker-slide terminal-slide" key={animationKey}>
+            <HackerTerminal 
+              title={slide.title || "TERMINAL"} 
+              lines={slide.lines?.map(l => ({ text: l.text, type: l.type, delay: 0 })) || []}
+              isActive={true}
+            />
+          </div>
+        );
+
+      case "hackerStats":
+        return (
+          <div className="slide-content hacker-slide" key={animationKey}>
+            <div className="hacker-stats">
+              {slide.items?.map((item, i) => (
+                <div key={i} className="hacker-stat" style={{ animationDelay: `${i * 0.1}s` }}>
+                  <div className="hacker-stat-value">{item.value}</div>
+                  <div className="hacker-stat-label">{item.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case "hackerCode":
+        return (
+          <div className="slide-content hacker-slide" key={animationKey}>
+            <h2 className="hacker-code-title">{slide.title}</h2>
+            <div className="hacker-code-block">
+              {slide.lines?.map((line, i) => (
+                <div key={i} className={`hacker-code-line ${line.type}`} style={{ animationDelay: `${i * 0.08}s` }}>
+                  {line.text || '\u00A0'}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
@@ -1412,8 +1641,10 @@ export default function Home() {
       </div>
 
       {/* Stage */}
-      <div className={`stage ${ratio === "16:9" ? "ratio-16-9" : "ratio-9-16"}`}>
-        <ParticleNetwork />
+      <div className={`stage ${ratio === "16:9" ? "ratio-16-9" : "ratio-9-16"} theme-${currentStory}`}>
+        {currentStory === 'reverseShell' ? <MatrixRain /> : <ParticleNetwork />}
+        {currentStory === 'reverseShell' && <div className="scanlines-overlay" />}
+        {currentStory === 'reverseShell' && <div className="crt-overlay" />}
         <div className="slide active">
           {renderSlide(story.slides[currentSlide], currentSlide)}
         </div>

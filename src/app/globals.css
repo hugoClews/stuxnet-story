@@ -1748,3 +1748,596 @@ body {
 .mb-4 {
   margin-bottom: clamp(10px, 2.5vmin, 20px);
 }
+
+/* ===========================================
+   HACKER THEME (Reverse Shell)
+   Matrix green, CRT effects, terminal noir
+   =========================================== */
+
+/* Theme-specific stage styling */
+.stage.theme-reverseShell {
+  background: #000 !important;
+}
+
+.stage.theme-reverseShell::before {
+  background: 
+    radial-gradient(ellipse at 30% 30%, rgba(0, 255, 65, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 70%, rgba(0, 255, 65, 0.03) 0%, transparent 50%) !important;
+}
+
+.stage.theme-reverseShell::after {
+  display: none;
+}
+
+/* Matrix Rain Canvas */
+.matrix-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* Scanlines Overlay */
+.scanlines-overlay {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* CRT Screen Effect */
+.crt-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 100%);
+  pointer-events: none;
+  z-index: 3;
+  animation: crtFlicker 0.15s infinite;
+}
+
+@keyframes crtFlicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.98; }
+}
+
+/* Glitch Text Effect */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  color: #ff0040;
+  animation: glitch-1 2s infinite linear alternate-reverse;
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+}
+
+.glitch-text::after {
+  color: #00ff41;
+  animation: glitch-2 3s infinite linear alternate-reverse;
+  clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+}
+
+@keyframes glitch-1 {
+  0%, 90%, 100% { transform: translate(0); }
+  92% { transform: translate(-2px, 1px); }
+  94% { transform: translate(2px, -1px); }
+  96% { transform: translate(-1px, 2px); }
+  98% { transform: translate(1px, -2px); }
+}
+
+@keyframes glitch-2 {
+  0%, 90%, 100% { transform: translate(0); }
+  91% { transform: translate(2px, 1px); }
+  93% { transform: translate(-2px, -1px); }
+  95% { transform: translate(1px, 2px); }
+  97% { transform: translate(-1px, -2px); }
+}
+
+/* Hacker Slide Base */
+.hacker-slide {
+  font-family: 'Fira Code', 'SF Mono', monospace !important;
+}
+
+/* Hacker Title */
+.hacker-title {
+  font-size: clamp(24px, 7vmin, 60px);
+  font-weight: 900;
+  color: #00ff41;
+  text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 40px #00ff41;
+  letter-spacing: 2px;
+  margin-bottom: clamp(10px, 2vmin, 20px);
+}
+
+.hacker-subtitle {
+  font-size: clamp(12px, 2.5vmin, 20px);
+  color: #00ff41;
+  opacity: 0.6;
+  font-family: 'Fira Code', monospace;
+}
+
+/* Hacker Text */
+.hacker-text {
+  font-size: clamp(18px, 5vmin, 40px);
+  color: #00ff41;
+  text-align: center;
+  line-height: 1.4;
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+
+.hacker-subtext {
+  font-size: clamp(12px, 2.5vmin, 18px);
+  color: #00ff41;
+  opacity: 0.5;
+  margin-top: clamp(15px, 3vmin, 25px);
+  text-align: center;
+}
+
+/* Glow classes */
+.glow-green {
+  color: #00ff41;
+  text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41;
+}
+
+.glow-red {
+  color: #ff0040;
+  text-shadow: 0 0 10px #ff0040, 0 0 20px #ff0040;
+}
+
+.glow-amber {
+  color: #ffb000;
+  text-shadow: 0 0 10px #ffb000, 0 0 20px #ffb000;
+}
+
+/* Hacker Terminal */
+.hacker-terminal {
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid #00ff41;
+  border-radius: clamp(4px, 1vmin, 8px);
+  width: 100%;
+  max-width: clamp(350px, 75vmin, 700px);
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.2), inset 0 0 60px rgba(0, 255, 65, 0.03);
+  position: relative;
+}
+
+.hacker-terminal-header {
+  background: rgba(0, 255, 65, 0.1);
+  padding: clamp(6px, 1.2vmin, 12px) clamp(10px, 2vmin, 16px);
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.5vmin, 14px);
+  border-bottom: 1px solid rgba(0, 255, 65, 0.3);
+}
+
+.hacker-terminal-dots {
+  display: flex;
+  gap: clamp(4px, 0.8vmin, 8px);
+}
+
+.hacker-terminal-dots .dot {
+  width: clamp(8px, 1.5vmin, 12px);
+  height: clamp(8px, 1.5vmin, 12px);
+  border-radius: 50%;
+}
+
+.hacker-terminal-dots .dot.red { background: #ff5f56; }
+.hacker-terminal-dots .dot.yellow { background: #ffbd2e; }
+.hacker-terminal-dots .dot.green { background: #27ca40; }
+
+.hacker-terminal-title {
+  font-size: clamp(10px, 1.6vmin, 14px);
+  color: #00ff41;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hacker-terminal-body {
+  padding: clamp(12px, 2.5vmin, 25px);
+  min-height: clamp(150px, 35vmin, 350px);
+  font-size: clamp(11px, 1.8vmin, 16px);
+  line-height: 1.7;
+}
+
+.hacker-line {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.hacker-line.prompt { color: #00ff41; }
+.hacker-line.command { color: #fff; }
+.hacker-line.output { color: #00ff41; opacity: 0.8; }
+.hacker-line.success { color: #27ca40; }
+.hacker-line.error { color: #ff0040; }
+.hacker-line.comment { color: #555; }
+
+.hacker-cursor {
+  color: #00ff41;
+  animation: hackerBlink 0.7s step-end infinite;
+}
+
+@keyframes hackerBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.hacker-terminal .scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+}
+
+/* Hacker Stats */
+.hacker-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(12px, 3vmin, 25px);
+  max-width: clamp(300px, 65vmin, 500px);
+}
+
+.hacker-stat {
+  background: rgba(0, 255, 65, 0.05);
+  border: 1px solid rgba(0, 255, 65, 0.3);
+  border-radius: clamp(4px, 1vmin, 8px);
+  padding: clamp(15px, 3vmin, 25px);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: hackerStatReveal 0.5s ease forwards;
+}
+
+@keyframes hackerStatReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hacker-stat-value {
+  font-size: clamp(28px, 7vmin, 50px);
+  font-weight: 800;
+  color: #00ff41;
+  text-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+  font-family: 'Fira Code', monospace;
+}
+
+.hacker-stat-label {
+  font-size: clamp(10px, 1.8vmin, 14px);
+  color: #00ff41;
+  opacity: 0.6;
+  margin-top: clamp(5px, 1vmin, 10px);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Hacker Code Block */
+.hacker-code-title {
+  font-size: clamp(14px, 2.5vmin, 22px);
+  color: #00ff41;
+  margin-bottom: clamp(12px, 2.5vmin, 20px);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.hacker-code-block {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(0, 255, 65, 0.3);
+  border-radius: clamp(4px, 1vmin, 8px);
+  padding: clamp(15px, 3vmin, 25px);
+  text-align: left;
+  max-width: clamp(350px, 70vmin, 600px);
+}
+
+.hacker-code-line {
+  font-size: clamp(11px, 1.8vmin, 15px);
+  line-height: 1.6;
+  opacity: 0;
+  transform: translateX(-10px);
+  animation: codeLineReveal 0.3s ease forwards;
+}
+
+@keyframes codeLineReveal {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.hacker-code-line.comment {
+  color: #555;
+}
+
+.hacker-code-line.normal {
+  color: #00ff41;
+}
+
+/* ===========================================
+   8-STAGE REVERSE SHELL ANIMATION
+   =========================================== */
+.rs-stages {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: clamp(8px, 2vmin, 20px);
+}
+
+.rs-stages-header {
+  text-align: center;
+  margin-bottom: clamp(10px, 2vmin, 20px);
+}
+
+.rs-stage-counter {
+  font-family: 'Fira Code', monospace;
+  margin-bottom: clamp(5px, 1vmin, 10px);
+}
+
+.rs-stage-num {
+  font-size: clamp(24px, 5vmin, 40px);
+  font-weight: 800;
+  color: #00ff41;
+  text-shadow: 0 0 20px #00ff41;
+}
+
+.rs-stage-total {
+  font-size: clamp(14px, 2.5vmin, 22px);
+  color: #00ff41;
+  opacity: 0.4;
+}
+
+.rs-stages-title {
+  font-size: clamp(16px, 3.5vmin, 28px);
+  font-weight: 800;
+  color: #00ff41;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px #00ff41;
+}
+
+.rs-stages-desc {
+  font-size: clamp(11px, 2vmin, 16px);
+  color: #00ff41;
+  opacity: 0.6;
+  margin-top: clamp(5px, 1vmin, 10px);
+}
+
+.rs-stages-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(15px, 3vmin, 25px);
+  margin-bottom: clamp(10px, 2vmin, 20px);
+}
+
+.rs-visual-icon {
+  font-size: clamp(40px, 10vmin, 80px);
+  animation: iconFloat 2s ease-in-out infinite;
+}
+
+.rs-visual-icon.pwned {
+  animation: iconPwned 0.5s ease infinite;
+}
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes iconPwned {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.1) rotate(-2deg); }
+  75% { transform: scale(1.1) rotate(2deg); }
+}
+
+.rs-stages-progress {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.rs-progress-node {
+  display: flex;
+  align-items: center;
+}
+
+.rs-progress-dot {
+  width: clamp(10px, 2vmin, 16px);
+  height: clamp(10px, 2vmin, 16px);
+  border-radius: 50%;
+  background: rgba(0, 255, 65, 0.2);
+  border: 2px solid rgba(0, 255, 65, 0.3);
+  transition: all 0.3s ease;
+}
+
+.rs-progress-node.completed .rs-progress-dot {
+  background: #00ff41;
+  border-color: #00ff41;
+  box-shadow: 0 0 10px #00ff41;
+}
+
+.rs-progress-node.active .rs-progress-dot {
+  background: #00ff41;
+  border-color: #fff;
+  box-shadow: 0 0 15px #00ff41, 0 0 30px #00ff41;
+  animation: activeDotPulse 1s ease-in-out infinite;
+}
+
+@keyframes activeDotPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.rs-progress-line {
+  width: clamp(15px, 3vmin, 30px);
+  height: 2px;
+  background: rgba(0, 255, 65, 0.2);
+  transition: all 0.3s ease;
+}
+
+.rs-progress-line.completed {
+  background: #00ff41;
+  box-shadow: 0 0 5px #00ff41;
+}
+
+/* Network Visual */
+.rs-network-visual {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  padding: clamp(10px, 2vmin, 20px);
+  min-height: 0;
+}
+
+.rs-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(4px, 1vmin, 10px);
+  padding: clamp(10px, 2vmin, 20px);
+  background: rgba(0, 255, 65, 0.05);
+  border: 2px solid rgba(0, 255, 65, 0.3);
+  border-radius: clamp(8px, 1.5vmin, 12px);
+  min-width: clamp(70px, 15vmin, 120px);
+  transition: all 0.4s ease;
+}
+
+.rs-node.active {
+  border-color: #00ff41;
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+}
+
+.rs-node.infected {
+  border-color: #ff0040;
+  background: rgba(255, 0, 64, 0.1);
+  box-shadow: 0 0 20px rgba(255, 0, 64, 0.3);
+}
+
+.rs-node.pwned {
+  border-color: #ff0040;
+  background: rgba(255, 0, 64, 0.2);
+  box-shadow: 0 0 30px rgba(255, 0, 64, 0.5);
+  animation: pwnedPulse 0.5s ease-in-out infinite;
+}
+
+@keyframes pwnedPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.rs-node-icon {
+  font-size: clamp(24px, 5vmin, 40px);
+}
+
+.rs-node-label {
+  font-size: clamp(8px, 1.4vmin, 12px);
+  font-weight: 700;
+  color: #00ff41;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.rs-node-port, .rs-node-status {
+  font-size: clamp(8px, 1.2vmin, 11px);
+  color: #00ff41;
+  font-family: 'Fira Code', monospace;
+  opacity: 0.7;
+}
+
+.rs-node.infected .rs-node-status,
+.rs-node.pwned .rs-node-status {
+  color: #ff0040;
+}
+
+.rs-connection-line {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 0 clamp(5px, 1vmin, 15px);
+}
+
+.rs-firewall-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: clamp(5px, 1vmin, 10px);
+  font-size: clamp(18px, 4vmin, 32px);
+}
+
+.rs-firewall-status {
+  font-size: clamp(7px, 1.2vmin, 10px);
+  color: #00ff41;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.6;
+}
+
+.rs-line-svg {
+  width: 100%;
+  height: clamp(30px, 6vmin, 50px);
+}
+
+.rs-path {
+  stroke: rgba(0, 255, 65, 0.2);
+  stroke-width: 2;
+  stroke-dasharray: 8 4;
+  fill: none;
+}
+
+.rs-path.active {
+  stroke: #ffb000;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 3px #ffb000);
+}
+
+.rs-path.connected {
+  stroke: #00ff41;
+  filter: drop-shadow(0 0 5px #00ff41);
+  animation: pathGlow 1s ease-in-out infinite;
+}
+
+@keyframes pathGlow {
+  0%, 100% { filter: drop-shadow(0 0 5px #00ff41); }
+  50% { filter: drop-shadow(0 0 15px #00ff41); }
+}
+
+.rs-packet {
+  fill: #ffb000;
+  filter: drop-shadow(0 0 5px #ffb000);
+}
+
+.rs-packet.inbound {
+  fill: #00ff41;
+  filter: drop-shadow(0 0 5px #00ff41);
+}
