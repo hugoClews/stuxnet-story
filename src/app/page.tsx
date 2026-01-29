@@ -4,7 +4,11 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import dynamic from "next/dynamic";
 import type L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { USBIcon, LaptopIcon, NetworkIcon, SCADAIcon, PLCIcon, CentrifugeIcon } from "@/components/StageIcons";
+import { 
+  USBIcon, LaptopIcon, NetworkIcon, SCADAIcon, PLCIcon, CentrifugeIcon,
+  ReconIcon, ListenerIcon, CraftIcon, DeliverIcon, ExecuteIcon, ConnectIcon, ShellIcon, PwnedIcon,
+  AttackerIcon, VictimIcon, FirewallIcon
+} from "@/components/StageIcons";
 
 // Dynamically import Lottie to avoid SSR issues
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
@@ -17,6 +21,18 @@ const IconComponents: Record<string, React.ComponentType<{ size?: number; infect
   scada: SCADAIcon,
   plc: PLCIcon,
   centrifuge: CentrifugeIcon,
+};
+
+// Reverse Shell icon components
+const RSIconComponents: Record<string, React.ComponentType<{ size?: number; infected?: boolean; className?: string }>> = {
+  recon: ReconIcon,
+  listen: ListenerIcon,
+  craft: CraftIcon,
+  deliver: DeliverIcon,
+  execute: ExecuteIcon,
+  connect: ConnectIcon,
+  shell: ShellIcon,
+  pwned: PwnedIcon,
 };
 
 // Story data type definitions
@@ -1294,18 +1310,28 @@ function HackerTerminal({ lines, title, isActive = true }: {
 
 // 8-Stage Reverse Shell Attack Animation
 function ReverseShellStages({ stage }: { stage: number }) {
-  const stages = [
-    { id: 'recon', icon: '🔍', title: 'RECONNAISSANCE', desc: 'Scanning target network for open services', visual: 'scan' },
-    { id: 'listen', icon: '📡', title: 'OPEN LISTENER', desc: 'Attacker opens port and waits', visual: 'listen' },
-    { id: 'craft', icon: '⚙️', title: 'CRAFT PAYLOAD', desc: 'Building the reverse shell payload', visual: 'craft' },
-    { id: 'deliver', icon: '📧', title: 'DELIVER PAYLOAD', desc: 'Payload reaches target via exploit/phishing', visual: 'deliver' },
-    { id: 'execute', icon: '▶️', title: 'EXECUTE', desc: 'Victim unknowingly runs malicious code', visual: 'execute' },
-    { id: 'connect', icon: '🔗', title: 'OUTBOUND CONNECTION', desc: 'Target connects BACK to attacker', visual: 'connect' },
-    { id: 'shell', icon: '💻', title: 'SHELL ACCESS', desc: 'Interactive command line established', visual: 'shell' },
-    { id: 'pwned', icon: '💀', title: 'SYSTEM COMPROMISED', desc: 'Attacker has full remote access', visual: 'pwned' },
-  ];
+  const [lottieData, setLottieData] = useState<object | null>(null);
+  
+  useEffect(() => {
+    fetch('/animations/data-packet.json')
+      .then(res => res.json())
+      .then(data => setLottieData(data))
+      .catch(() => {});
+  }, []);
+  
+  const stages = useMemo(() => [
+    { id: 'recon', iconType: 'recon', title: 'RECONNAISSANCE', desc: 'Scanning target network for open services', visual: 'scan' },
+    { id: 'listen', iconType: 'listen', title: 'OPEN LISTENER', desc: 'Attacker opens port and waits', visual: 'listen' },
+    { id: 'craft', iconType: 'craft', title: 'CRAFT PAYLOAD', desc: 'Building the reverse shell payload', visual: 'craft' },
+    { id: 'deliver', iconType: 'deliver', title: 'DELIVER PAYLOAD', desc: 'Payload reaches target via exploit/phishing', visual: 'deliver' },
+    { id: 'execute', iconType: 'execute', title: 'EXECUTE', desc: 'Victim unknowingly runs malicious code', visual: 'execute' },
+    { id: 'connect', iconType: 'connect', title: 'OUTBOUND CONNECTION', desc: 'Target connects BACK to attacker', visual: 'connect' },
+    { id: 'shell', iconType: 'shell', title: 'SHELL ACCESS', desc: 'Interactive command line established', visual: 'shell' },
+    { id: 'pwned', iconType: 'pwned', title: 'SYSTEM COMPROMISED', desc: 'Attacker has full remote access', visual: 'pwned' },
+  ], []);
   
   const current = stages[stage];
+  const IconComponent = RSIconComponents[current.iconType];
   
   return (
     <div className="rs-stages">
@@ -1319,8 +1345,8 @@ function ReverseShellStages({ stage }: { stage: number }) {
       </div>
       
       <div className="rs-stages-visual">
-        <div className={`rs-visual-icon ${current.visual}`}>
-          <span>{current.icon}</span>
+        <div className={`rs-visual-icon-svg ${current.visual}`}>
+          {IconComponent && <IconComponent size={72} infected={true} />}
         </div>
         
         <div className="rs-stages-progress">
@@ -1340,36 +1366,53 @@ function ReverseShellStages({ stage }: { stage: number }) {
       
       <div className="rs-network-visual">
         <div className={`rs-node attacker ${stage >= 1 ? 'active' : ''}`}>
-          <span className="rs-node-icon">🎭</span>
+          <div className="rs-node-icon-svg">
+            <AttackerIcon size={48} active={stage >= 1} />
+          </div>
           <span className="rs-node-label">ATTACKER</span>
           {stage >= 1 && <span className="rs-node-port">:4444</span>}
         </div>
         
         <div className="rs-connection-line">
           <svg viewBox="0 0 200 40" className="rs-line-svg">
+            <defs>
+              <linearGradient id="rsPathGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#00ff41" />
+                <stop offset="100%" stopColor="#ff3366" />
+              </linearGradient>
+            </defs>
             <path 
-              d="M 10 20 L 190 20" 
-              className={`rs-path ${stage >= 5 ? 'active' : ''} ${stage >= 6 ? 'connected' : ''}`}
+              d="M 10 20 Q 100 5 190 20" 
+              className={`rs-path-curve ${stage >= 5 ? 'active' : ''} ${stage >= 6 ? 'connected' : ''}`}
+              fill="none"
             />
             {stage >= 3 && stage < 6 && (
-              <circle className="rs-packet outbound" r="4">
-                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 10 20 L 190 20" />
+              <circle className="rs-packet outbound" r="5" fill="#ff3366">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 10 20 Q 100 5 190 20" />
               </circle>
             )}
             {stage >= 5 && (
-              <circle className="rs-packet inbound" r="4">
-                <animateMotion dur="1s" repeatCount="indefinite" path="M 190 20 L 10 20" />
+              <circle className="rs-packet inbound" r="5" fill="#00ff41">
+                <animateMotion dur="1s" repeatCount="indefinite" path="M 190 20 Q 100 35 10 20" />
               </circle>
             )}
           </svg>
-          <div className="rs-firewall-icon">
-            <span>🧱</span>
+          <div className="rs-firewall-icon-svg">
+            <FirewallIcon size={36} bypassed={stage >= 5} />
             <span className="rs-firewall-status">{stage >= 5 ? 'BYPASSED' : 'ACTIVE'}</span>
           </div>
+          {/* Lottie packet animation overlay */}
+          {stage >= 5 && lottieData && (
+            <div className="rs-lottie-packet">
+              <Lottie animationData={lottieData} loop style={{ width: 32, height: 32 }} />
+            </div>
+          )}
         </div>
         
         <div className={`rs-node victim ${stage >= 4 ? 'infected' : ''} ${stage >= 7 ? 'pwned' : ''}`}>
-          <span className="rs-node-icon">{stage >= 7 ? '💀' : '🖥️'}</span>
+          <div className="rs-node-icon-svg">
+            <VictimIcon size={48} infected={stage >= 4} pwned={stage >= 7} />
+          </div>
           <span className="rs-node-label">TARGET</span>
           {stage >= 4 && <span className="rs-node-status">{stage >= 7 ? 'PWNED' : 'INFECTED'}</span>}
         </div>

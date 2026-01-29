@@ -2517,6 +2517,7 @@ body {
   margin-bottom: clamp(10px, 2vmin, 20px);
 }
 
+/* Legacy emoji icon */
 .rs-visual-icon {
   font-size: clamp(40px, 10vmin, 80px);
   animation: iconFloat 2s ease-in-out infinite;
@@ -2524,6 +2525,39 @@ body {
 
 .rs-visual-icon.pwned {
   animation: iconPwned 0.5s ease infinite;
+}
+
+/* SVG-based icon container */
+.rs-visual-icon-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: iconFloat 2s ease-in-out infinite;
+}
+
+.rs-visual-icon-svg svg {
+  width: clamp(56px, 12vmin, 90px);
+  height: clamp(56px, 12vmin, 90px);
+}
+
+.rs-visual-icon-svg.pwned {
+  animation: iconPwned 0.5s ease infinite;
+}
+
+.rs-visual-icon-svg.scan svg,
+.rs-visual-icon-svg.listen svg {
+  filter: drop-shadow(0 0 15px #00ff41);
+}
+
+.rs-visual-icon-svg.craft svg,
+.rs-visual-icon-svg.deliver svg,
+.rs-visual-icon-svg.execute svg {
+  filter: drop-shadow(0 0 15px #ff3366);
+}
+
+.rs-visual-icon-svg.connect svg,
+.rs-visual-icon-svg.shell svg {
+  filter: drop-shadow(0 0 15px #00ff41);
 }
 
 @keyframes iconFloat {
@@ -2633,8 +2667,21 @@ body {
   50% { transform: scale(1.05); }
 }
 
+/* Legacy emoji icon */
 .rs-node-icon {
   font-size: clamp(24px, 5vmin, 40px);
+}
+
+/* SVG-based node icons */
+.rs-node-icon-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rs-node-icon-svg svg {
+  width: clamp(36px, 7vmin, 56px);
+  height: clamp(36px, 7vmin, 56px);
 }
 
 .rs-node-label {
@@ -2666,12 +2713,26 @@ body {
   padding: 0 clamp(5px, 1vmin, 15px);
 }
 
+/* Legacy firewall icon */
 .rs-firewall-icon {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: clamp(5px, 1vmin, 10px);
   font-size: clamp(18px, 4vmin, 32px);
+}
+
+/* SVG-based firewall icon */
+.rs-firewall-icon-svg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: clamp(5px, 1vmin, 10px);
+}
+
+.rs-firewall-icon-svg svg {
+  width: clamp(28px, 5vmin, 44px);
+  height: clamp(28px, 5vmin, 44px);
 }
 
 .rs-firewall-status {
@@ -2681,6 +2742,45 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   opacity: 0.6;
+}
+
+/* Lottie packet animation */
+.rs-lottie-packet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: rsPacketFloat 2s ease-in-out infinite;
+}
+
+@keyframes rsPacketFloat {
+  0%, 100% { 
+    left: 80%;
+    opacity: 1;
+  }
+  50% { 
+    left: 20%;
+    opacity: 0.7;
+  }
+}
+
+/* Curved path for connection line */
+.rs-path-curve {
+  stroke: rgba(0, 255, 65, 0.2);
+  stroke-width: 2;
+  transition: all 0.5s ease;
+}
+
+.rs-path-curve.active {
+  stroke: url(#rsPathGrad);
+  stroke-width: 3;
+  filter: drop-shadow(0 0 5px #00ff41);
+}
+
+.rs-path-curve.connected {
+  stroke: #00ff41;
+  stroke-width: 4;
+  filter: drop-shadow(0 0 10px #00ff41);
 }
 
 .rs-line-svg {
