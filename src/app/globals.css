@@ -677,6 +677,70 @@ body {
   max-height: 711px;
 }
 
+/* Mobile portrait - 16:9 gets more screen space */
+@media (max-width: 768px) and (orientation: portrait) {
+  .stage.ratio-16-9 {
+    width: 98vw;
+    height: calc(98vw * 9 / 16);
+    max-width: none;
+    max-height: none;
+  }
+  
+  .stage.ratio-9-16 {
+    width: min(85vw, (90vh - 100px) * 9 / 16);
+    height: min(90vh - 100px, 85vw * 16 / 9);
+    max-width: none;
+    max-height: none;
+  }
+  
+  .player-container {
+    padding: 5px;
+    justify-content: flex-start;
+    padding-top: 60px;
+  }
+  
+  .controls {
+    top: 5px;
+    right: 5px;
+    gap: 4px;
+  }
+  
+  .controls button {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  
+  .story-selector {
+    top: 5px;
+    left: 5px;
+  }
+  
+  .story-selector select {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  
+  .nav {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  
+  .nav-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 400px) and (orientation: portrait) {
+  .stage.ratio-16-9 {
+    width: 100vw;
+    height: calc(100vw * 9 / 16);
+    border-radius: 0;
+  }
+}
+
 /* Slide */
 .slide {
   position: absolute;
