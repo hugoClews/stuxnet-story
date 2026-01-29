@@ -589,163 +589,161 @@ const stories: Record<string, Story> = {
     subtitle: "The Art of Digital Deception",
     slides: [
       {
-        type: "morphingShape",
-        title: "PHISHING",
+        type: "pastelMorph",
+        title: "Phishing",
         subtitle: "Nothing is what it seems",
         transition: "fade"
       },
       {
-        type: "hackerText",
-        content: "91% of cyberattacks start with a <span class='glow-red'>phishing email</span>",
+        type: "pastelText",
+        content: "91% of cyberattacks start with a <span class='highlight-pink'>phishing email</span>",
         subtext: "The human is always the weakest link.",
-        transition: "scale-up"
+        transition: "fade"
       },
       {
-        type: "morphingShape",
-        title: "DECEPTION",
+        type: "pastelMorph",
+        title: "Deception",
         subtitle: "Legitimate on the surface. Malicious underneath.",
         transition: "fade"
       },
       {
-        type: "hackerText",
-        content: "The attacker becomes <span class='glow-green'>someone you trust</span>",
+        type: "pastelText",
+        content: "The attacker becomes <span class='highlight-blue'>someone you trust</span>",
         subtext: "Your bank. Your boss. Your IT department.",
-        transition: "slide-right"
+        transition: "fade"
       },
       {
-        type: "dataVisualization",
-        title: "THE THREAT LANDSCAPE",
-        subtitle: "Phishing by the numbers",
+        type: "pastelStats",
+        title: "The Threat Landscape",
         items: [
-          { value: "3.4B", label: "Phishing emails sent daily" },
+          { value: "3.4B", label: "Emails sent daily" },
           { value: "36%", label: "Breaches involve phishing" },
           { value: "$4.9M", label: "Average breach cost" },
-          { value: "22%", label: "Click rate on phishing" }
+          { value: "22%", label: "Click rate" }
         ],
-        transition: "slide-up"
+        transition: "fade"
       },
       {
-        type: "hackerTitle",
-        title: "ANATOMY_OF",
-        subtitle: "// A phishing attack dissected",
-        transition: "glitch"
+        type: "pastelTitle",
+        title: "Anatomy of an Attack",
+        subtitle: "Understanding how phishing works",
+        transition: "fade"
       },
       {
-        type: "pulseRadar",
-        title: "STEP 1: RECONNAISSANCE",
-        subtitle: "Harvesting targets from LinkedIn, company sites, data leaks",
-        transition: "scale"
+        type: "pastelText",
+        content: "<span class='highlight-lavender'>Step 1:</span> Reconnaissance",
+        subtext: "Harvesting targets from LinkedIn, company sites, and data leaks",
+        transition: "fade"
       },
       {
-        type: "hackerCode",
-        title: "STEP 2: CRAFT THE LURE",
-        transition: "wipe",
+        type: "pastelCode",
+        title: "Step 2: Craft the Lure",
+        transition: "fade",
         lines: [
-          { text: "// The perfect phishing email:", type: "comment" },
+          { text: "The perfect phishing email:", type: "comment" },
           { text: "", type: "normal" },
           { text: "From: it-support@yourcompany.com", type: "normal" },
-          { text: "Subject: URGENT: Password Expires Today", type: "normal" },
+          { text: "Subject: Password Expires Today", type: "highlight" },
           { text: "", type: "normal" },
           { text: "Dear Employee,", type: "normal" },
           { text: "", type: "normal" },
           { text: "Your password expires in 2 hours.", type: "normal" },
-          { text: "Click here to reset: [MALICIOUS LINK]", type: "normal" },
+          { text: "Click here to reset: [link]", type: "highlight" },
           { text: "", type: "normal" },
-          { text: "// Urgency + Authority = Compliance", type: "comment" }
+          { text: "Urgency + Authority = Action", type: "comment" }
         ]
       },
       {
-        type: "circuitBoard",
-        title: "STEP 3: INFRASTRUCTURE",
-        subtitle: "Clone the login page. Register lookalike domains.",
-        transition: "wipe"
+        type: "pastelText",
+        content: "<span class='highlight-lavender'>Step 3:</span> Infrastructure",
+        subtext: "Clone the login page. Register lookalike domains.",
+        transition: "fade"
       },
       {
-        type: "hackerTerminal",
-        title: "STEP 4: CREDENTIAL HARVEST",
-        transition: "scale",
+        type: "pastelTerminal",
+        title: "Step 4: Credential Harvest",
+        transition: "fade",
         lines: [
-          { text: "root@phish:~# ", type: "prompt" },
-          { text: "tail -f /var/log/credentials.log", type: "command" },
-          { text: "[+] New victim connected from 192.168.1.50", type: "success", delay: 800 },
-          { text: "[*] Serving fake Office365 login...", type: "output", delay: 600 },
-          { text: "[+] CAPTURED: john.smith@company.com", type: "success", delay: 1000 },
-          { text: "[+] PASSWORD: Summer2024!", type: "success", delay: 400 },
-          { text: "[*] Redirecting to real site...", type: "output", delay: 600 },
-          { text: "[+] Victim suspects nothing.", type: "success", delay: 800 },
-          { text: "", type: "output", delay: 200 },
-          { text: "[+] New victim connected from 10.0.0.23", type: "success", delay: 1200 },
-          { text: "[+] CAPTURED: sarah.jones@company.com", type: "success", delay: 800 }
+          { text: "$ ", type: "prompt" },
+          { text: "tail -f credentials.log", type: "command" },
+          { text: "New connection from 192.168.1.50", type: "output", delay: 1000 },
+          { text: "Serving login page...", type: "output", delay: 800 },
+          { text: "Captured: john@company.com", type: "success", delay: 1200 },
+          { text: "Redirecting to real site...", type: "output", delay: 800 },
+          { text: "User suspects nothing.", type: "success", delay: 1000 },
+          { text: "", type: "output", delay: 400 },
+          { text: "New connection from 10.0.0.23", type: "output", delay: 1500 },
+          { text: "Captured: sarah@company.com", type: "success", delay: 1200 }
         ]
       },
       {
-        type: "morphingShape",
-        title: "TRUST EXPLOITED",
+        type: "pastelMorph",
+        title: "Trust Exploited",
         subtitle: "One click. Total compromise.",
         transition: "fade"
       },
       {
-        type: "threatHeatmap",
-        title: "STEP 5: LATERAL MOVEMENT",
-        subtitle: "Use stolen creds to access email, VPN, cloud services",
+        type: "pastelText",
+        content: "<span class='highlight-lavender'>Step 5:</span> Lateral Movement",
+        subtext: "Using stolen credentials to access email, VPN, and cloud services",
         transition: "fade"
       },
       {
-        type: "hackerStats",
-        title: "TIME TO DAMAGE",
-        transition: "slide-up",
+        type: "pastelStats",
+        title: "Time to Damage",
         items: [
-          { value: "1 min", label: "Click to credential theft" },
-          { value: "16 min", label: "First lateral movement" },
-          { value: "1 hour", label: "Domain admin access" },
-          { value: "48 hrs", label: "Full data exfiltration" }
-        ]
+          { value: "1 min", label: "Credential theft" },
+          { value: "16 min", label: "Lateral movement" },
+          { value: "1 hour", label: "Admin access" },
+          { value: "48 hrs", label: "Data exfiltration" }
+        ],
+        transition: "fade"
       },
       {
-        type: "firewallShield",
-        title: "DEFENSE",
-        subtitle: "How to protect yourself and your organization",
-        transition: "scale-up"
+        type: "pastelTitle",
+        title: "Defense",
+        subtitle: "How to protect yourself",
+        transition: "fade"
       },
       {
-        type: "hackerCode",
-        title: "RED FLAGS",
-        transition: "slide-right",
+        type: "pastelCode",
+        title: "Red Flags to Watch",
+        transition: "fade",
         lines: [
-          { text: "// Spot the phish:", type: "comment" },
+          { text: "Spot the phish:", type: "comment" },
           { text: "", type: "normal" },
-          { text: "✗ Urgency and pressure tactics", type: "normal" },
-          { text: "✗ Mismatched sender domains", type: "normal" },
-          { text: "✗ Suspicious links (hover first!)", type: "normal" },
-          { text: "✗ Generic greetings", type: "normal" },
-          { text: "✗ Requests for credentials", type: "normal" },
-          { text: "✗ Too good to be true offers", type: "normal" },
+          { text: "⚠ Urgency and pressure tactics", type: "normal" },
+          { text: "⚠ Mismatched sender domains", type: "normal" },
+          { text: "⚠ Suspicious links", type: "normal" },
+          { text: "⚠ Generic greetings", type: "normal" },
+          { text: "⚠ Requests for credentials", type: "normal" },
+          { text: "⚠ Too good to be true", type: "normal" },
           { text: "", type: "normal" },
-          { text: "// When in doubt, verify out-of-band", type: "comment" }
+          { text: "When in doubt, verify directly", type: "comment" }
         ]
       },
       {
-        type: "hackerStats",
-        title: "PROTECTION LAYERS",
-        transition: "scale",
+        type: "pastelStats",
+        title: "Protection Layers",
         items: [
           { value: "MFA", label: "Multi-factor auth" },
           { value: "DMARC", label: "Email authentication" },
           { value: "EDR", label: "Endpoint detection" },
-          { value: "SIEM", label: "Security monitoring" }
-        ]
+          { value: "Training", label: "User awareness" }
+        ],
+        transition: "fade"
       },
       {
-        type: "morphingShape",
-        title: "STAY VIGILANT",
+        type: "pastelMorph",
+        title: "Stay Vigilant",
         subtitle: "Trust nothing. Verify everything.",
         transition: "fade"
       },
       {
-        type: "hackerTitle",
-        title: "THINK_BEFORE",
-        subtitle: "// YOU CLICK",
-        transition: "glitch"
+        type: "pastelTitle",
+        title: "Think Before You Click",
+        subtitle: "Your awareness is the first line of defense",
+        transition: "fade"
       }
     ]
   }
@@ -1924,6 +1922,198 @@ function MorphingShape({ title, subtitle }: { title: string; subtitle: string })
     </div>
   );
 }
+
+// ============================================
+// PASTEL THEME COMPONENTS
+// ============================================
+
+// Pastel Morphing Shape
+function PastelMorph({ title, subtitle }: { title: string; subtitle: string }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    
+    let time = 0;
+    let animationId: number;
+    
+    // Pastel color palette
+    const colors = [
+      { h: 350, s: 60, l: 80 }, // Pink
+      { h: 200, s: 50, l: 80 }, // Light blue
+      { h: 280, s: 40, l: 80 }, // Lavender
+      { h: 160, s: 40, l: 80 }, // Mint
+    ];
+    
+    const animate = () => {
+      // Soft cream background
+      ctx.fillStyle = '#fef9f3';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const baseRadius = Math.min(canvas.width, canvas.height) * 0.28;
+      
+      // Draw multiple morphing layers - slower animation
+      for (let layer = 3; layer >= 0; layer--) {
+        ctx.beginPath();
+        const points = 5 + layer;
+        const layerOffset = layer * 0.3;
+        
+        for (let i = 0; i <= points * 12; i++) {
+          const angle = (i / (points * 12)) * Math.PI * 2;
+          // Slower, gentler morphing
+          const morph = Math.sin(angle * points + time * 0.8 + layerOffset) * 0.2 + 
+                       Math.sin(angle * (points + 1) - time * 0.5) * 0.15;
+          const r = baseRadius * (0.5 + layer * 0.18) * (1 + morph);
+          const x = cx + Math.cos(angle) * r;
+          const y = cy + Math.sin(angle) * r;
+          
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        
+        ctx.closePath();
+        const color = colors[layer % colors.length];
+        const alpha = 0.25 + layer * 0.08;
+        ctx.fillStyle = `hsla(${color.h}, ${color.s}%, ${color.l}%, ${alpha})`;
+        ctx.fill();
+        ctx.strokeStyle = `hsla(${color.h}, ${color.s}%, ${color.l - 10}%, ${alpha + 0.2})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+      
+      // Much slower animation speed
+      time += 0.008;
+      animationId = requestAnimationFrame(animate);
+    };
+    animate();
+    
+    return () => cancelAnimationFrame(animationId);
+  }, []);
+  
+  return (
+    <div className="pastel-morph-slide">
+      <canvas ref={canvasRef} className="pastel-morph-canvas" />
+      <div className="pastel-morph-overlay">
+        <h2 className="pastel-title pastel-float">{title}</h2>
+        <p className="pastel-subtitle">{subtitle}</p>
+      </div>
+    </div>
+  );
+}
+
+// Pastel Text Slide
+function PastelText({ content, subtext }: { content: string; subtext?: string }) {
+  return (
+    <div className="pastel-slide">
+      <p className="pastel-text" dangerouslySetInnerHTML={{ __html: content }} />
+      {subtext && <p className="pastel-subtext">{subtext}</p>}
+    </div>
+  );
+}
+
+// Pastel Title Slide
+function PastelTitle({ title, subtitle }: { title: string; subtitle?: string }) {
+  return (
+    <div className="pastel-slide">
+      <h1 className="pastel-title pastel-float">{title}</h1>
+      {subtitle && <p className="pastel-subtitle">{subtitle}</p>}
+    </div>
+  );
+}
+
+// Pastel Stats
+function PastelStats({ title, items }: { title: string; items?: Array<{value: string; label: string}> }) {
+  return (
+    <div className="pastel-slide">
+      <h2 className="pastel-title" style={{ marginBottom: 'clamp(20px, 4vmin, 40px)' }}>{title}</h2>
+      <div className="pastel-stats">
+        {items?.map((item, i) => (
+          <div key={i} className="pastel-stat-card" style={{ animationDelay: `${i * 0.2}s` }}>
+            <div className="pastel-stat-value">{item.value}</div>
+            <div className="pastel-stat-label">{item.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Pastel Code Block
+function PastelCode({ title, lines }: { title: string; lines?: Array<{text: string; type: string}> }) {
+  return (
+    <div className="pastel-slide">
+      <h2 className="pastel-title" style={{ marginBottom: 'clamp(20px, 4vmin, 40px)' }}>{title}</h2>
+      <div className="pastel-code">
+        {lines?.map((line, i) => (
+          <div 
+            key={i} 
+            className={`pastel-code-line ${line.type}`}
+            style={{ animationDelay: `${i * 0.15}s` }}
+          >
+            {line.text || '\u00A0'}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Pastel Terminal
+function PastelTerminal({ title, lines }: { title: string; lines?: TerminalLine[] }) {
+  const [visibleLines, setVisibleLines] = useState(0);
+  
+  useEffect(() => {
+    if (!lines) return;
+    setVisibleLines(0);
+    let currentLine = 0;
+    
+    const showNextLine = () => {
+      if (currentLine < lines.length) {
+        const delay = lines[currentLine].delay || 400;
+        setTimeout(() => {
+          currentLine++;
+          setVisibleLines(currentLine);
+          showNextLine();
+        }, delay);
+      }
+    };
+    
+    showNextLine();
+  }, [lines]);
+  
+  return (
+    <div className="pastel-slide">
+      <h2 className="pastel-title" style={{ marginBottom: 'clamp(20px, 4vmin, 40px)' }}>{title}</h2>
+      <div className="pastel-terminal">
+        <div className="pastel-terminal-header">
+          <div className="pastel-terminal-dots">
+            <span className="dot red"></span>
+            <span className="dot yellow"></span>
+            <span className="dot green"></span>
+          </div>
+          <span className="pastel-terminal-title">Terminal</span>
+        </div>
+        <div className="pastel-terminal-body">
+          {lines?.slice(0, visibleLines).map((line, i) => (
+            <div key={i} className={`pastel-line ${line.type}`}>
+              {line.text || '\u00A0'}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
 
 // Animated Data Visualization
 function DataVisualization({ title, subtitle, items }: { title: string; subtitle: string; items?: Array<{value: string; label: string}> }) {
@@ -4046,6 +4236,49 @@ export default function Home() {
         return (
           <div className={`slide-content ${transitionClass}`} key={animationKey}>
             <PulseGrid title={slide.title || ""} subtitle={slide.subtitle || ""} />
+          </div>
+        );
+
+      // Pastel Theme Slides
+      case "pastelMorph":
+        return (
+          <div className={`slide-content ${transitionClass}`} key={animationKey}>
+            <PastelMorph title={slide.title || ""} subtitle={slide.subtitle || ""} />
+          </div>
+        );
+
+      case "pastelText":
+        return (
+          <div className={`slide-content ${transitionClass}`} key={animationKey}>
+            <PastelText content={slide.content || ""} subtext={slide.subtext} />
+          </div>
+        );
+
+      case "pastelTitle":
+        return (
+          <div className={`slide-content ${transitionClass}`} key={animationKey}>
+            <PastelTitle title={slide.title || ""} subtitle={slide.subtitle} />
+          </div>
+        );
+
+      case "pastelStats":
+        return (
+          <div className={`slide-content ${transitionClass}`} key={animationKey}>
+            <PastelStats title={slide.title || ""} items={slide.items} />
+          </div>
+        );
+
+      case "pastelCode":
+        return (
+          <div className={`slide-content ${transitionClass}`} key={animationKey}>
+            <PastelCode title={slide.title || ""} lines={slide.lines} />
+          </div>
+        );
+
+      case "pastelTerminal":
+        return (
+          <div className={`slide-content ${transitionClass}`} key={animationKey}>
+            <PastelTerminal title={slide.title || ""} lines={slide.lines} />
           </div>
         );
 
