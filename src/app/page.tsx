@@ -1930,18 +1930,14 @@ function MorphingShape({ title, subtitle }: { title: string; subtitle: string })
 // Pastel Morphing Shape
 function PastelMorph({ title, subtitle }: { title: string; subtitle: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-    
-    let time = 0;
-    let animationId: number;
     
     // Pastel color palette
     const colors = [
@@ -1951,7 +1947,20 @@ function PastelMorph({ title, subtitle }: { title: string; subtitle: string }) {
       { h: 160, s: 40, l: 80 }, // Mint
     ];
     
+    let time = 0;
+    let animationId: number;
+    
+    const resize = () => {
+      const rect = container.getBoundingClientRect();
+      canvas.width = rect.width || 800;
+      canvas.height = rect.height || 600;
+    };
+    
     const animate = () => {
+      if (canvas.width === 0 || canvas.height === 0) {
+        resize();
+      }
+      
       // Soft cream background
       ctx.fillStyle = '#fef9f3';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1981,7 +1990,7 @@ function PastelMorph({ title, subtitle }: { title: string; subtitle: string }) {
         
         ctx.closePath();
         const color = colors[layer % colors.length];
-        const alpha = 0.25 + layer * 0.08;
+        const alpha = 0.35 + layer * 0.1;
         ctx.fillStyle = `hsla(${color.h}, ${color.s}%, ${color.l}%, ${alpha})`;
         ctx.fill();
         ctx.strokeStyle = `hsla(${color.h}, ${color.s}%, ${color.l - 10}%, ${alpha + 0.2})`;
@@ -1993,13 +2002,19 @@ function PastelMorph({ title, subtitle }: { title: string; subtitle: string }) {
       time += 0.008;
       animationId = requestAnimationFrame(animate);
     };
+    
+    resize();
+    window.addEventListener('resize', resize);
     animate();
     
-    return () => cancelAnimationFrame(animationId);
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', resize);
+    };
   }, []);
   
   return (
-    <div className="pastel-morph-slide">
+    <div ref={containerRef} className="pastel-morph-slide">
       <canvas ref={canvasRef} className="pastel-morph-canvas" />
       <div className="pastel-morph-overlay">
         <h2 className="pastel-title pastel-float">{title}</h2>
